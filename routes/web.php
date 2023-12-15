@@ -45,6 +45,13 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
             Route::post('create', 'TrainingController@instructionsCreate');
             Route::get('load/{assistant_id}', 'TrainingController@instructionsLoad');
             Route::get('delete/{instruction_id}', 'TrainingController@instructionDelete');
+            Route::post('sync-assistant', 'TrainingController@syncAssistant');
+        });
+        Route::prefix('chat')->group(function () {
+            Route::post('create-thread-and-run', 'TrainingController@chatCreateThreadAndRun');
+            Route::get('list-messages/{assistant_id}/{thread_id}', 'TrainingController@chatListMessages');
+            Route::post('create-message', 'TrainingController@chatCreateMessage');
+            Route::get('create-run/{assistant_id}/{thread_id}', 'TrainingController@chatCreateRun');
         });
     });
 

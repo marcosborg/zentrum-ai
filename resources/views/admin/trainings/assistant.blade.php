@@ -16,7 +16,8 @@
                         <p><small>{{ $assistant->project->name }}</small></p>
                     </div>
                     <div class="card-footer">
-                        <button class="btn btn-success">Sync</button>
+                        <button class="btn btn-success" onclick="modifyAssistant()"
+                            id="modify-assistant-button">Sync</button>
                     </div>
                 </div>
             </div>
@@ -44,26 +45,14 @@
                     <div class="card-header">
                         Test your assistant
                     </div>
-                    <div class="card-body" style="height: 40vh;">
-                        <div class="chat-box">
-                            <div class="chat">
-                                <div class="inner-text">
-                                    Em que posso ser útil? Sou o Adriano.
-                                </div>
-                            </div>
-                        </div>
-                        <div class="user-box">
-                            <div class="user">
-                                <div class="inner-text">olá</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-footer">
+                    <div class="card-body" style="height: 40vh;" id="chat-content"></div>
+                    <div class="card-footer" id="message-card-footer">
                         <div class="form-group">
                             <label>Mensagem</label>
-                            <textarea class="form-control"></textarea>
+                            <textarea class="form-control" id="message-textarea"></textarea>
                         </div>
-                        <button class="btn btn-success">Send message</button>
+                        <button type="button" class="btn btn-success" onclick="sendMessage()">Send
+                            message</button>
                     </div>
                 </div>
             </div>
@@ -78,6 +67,8 @@
 @section('scripts')
 @parent
 <script>
+    const assistant_id = {{ $assistant->id }};
+    var thread_id = null;
     $(() => {
         $('#instructions_create').ajaxForm({
             beforeSubmit: () => {
@@ -110,7 +101,7 @@
     });
     loadInstructions = () => {
         $.LoadingOverlay('show');
-        $.get('/admin/trainings/instructions/load/' + {{ $assistant->id }}).then((resp) => {
+        $.get('/admin/trainings/instructions/load/' + assistant_id).then((resp) => {
             $('#instructions_list').html(resp);
             $.LoadingOverlay('hide');
         });
@@ -136,6 +127,131 @@
                     });
             }
         });
+    }
+    modifyAssistant = () => {
+        let button = $('#modify-assistant-button');
+        button.LoadingOverlay('show');
+        var instructions = '';
+        $('.instruction-text').each(function() {
+            instructions += $(this).text() + ' ';
+        });
+        let data = {
+            instructions: instructions,
+            assistant_id: assistant_id
+        }
+        $.post({
+            url: '/admin/trainings/instructions/sync-assistant',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: data,
+            success: () => {
+                button.LoadingOverlay('hide');
+                Swal.fire('Updated');
+            },
+            error: (error) => {
+                button.LoadingOverlay('hide');
+                Swal.fire('Sync error');
+            }
+        });
+    }
+    sendMessage = () => {
+        let message = $('#message-textarea').val();
+        if(message.length > 0) {
+            $('#message-textarea').val('');
+            addMessage('user', message);
+            //OVERLAY
+            let message_card_footer = $('#message-card-footer');
+            message_card_footer.LoadingOverlay('show');
+            let data = {
+                assistant_id: assistant_id,
+                message: message
+            }
+            if(!thread_id){
+                //Create thread and run
+                $.post({
+                    url: '/admin/trainings/chat/create-thread-and-run',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: data,
+                    success: (resp) => {
+                        thread_id = resp.thread_id;
+                        //List messages
+                        let lm = setInterval(() => {
+                            listMessages(thread_id).then((resp) => {
+                            message = resp.data[0].content[0].text.value;
+                            if (resp.data[0].role != 'user' && message.length > 0) {
+                                clearInterval(lm);
+                                addMessage('assistant', message);
+                                message_card_footer.LoadingOverlay('hide');
+                            }
+                        });
+                        }, 3000);
+                    }
+                });
+            } else {
+                //Create message
+                let data = {
+                    content: message,
+                    thread_id: thread_id,
+                    assistant_id: assistant_id
+                }
+                $.post({
+                    url: '/admin/trainings/chat/create-message',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: data,
+                    success: () => {
+                        $.get('/admin/trainings/chat/create-run/' + assistant_id + '/' + thread_id).then(() => {
+                            //List messages
+                            let lm = setInterval(() => {
+                                listMessages(thread_id).then((resp) => {
+                                    message = resp.data[0].content[0].text.value;
+                                    if (resp.data[0].role != 'user' && message.length > 0) {
+                                        clearInterval(lm);
+                                        addMessage('assistant', message);
+                                        message_card_footer.LoadingOverlay('hide');
+                                    }
+                                });
+                            }, 3000);
+                        });
+                    }
+                });
+            }
+        }
+    }
+    listMessages = async () => {
+        try {
+            const messages = await $.get('/admin/trainings/chat/list-messages/' + assistant_id + '/' + thread_id);
+            return messages
+        } catch (error) {
+            return error;
+        }
+    }
+
+    addMessage = (role, text) => {
+        let html = '';
+        switch (role) {
+            case 'user':
+                html += '<div class="user-box">';
+                html += '<div class="user">';
+                html += '<div class="inner-text">' + text + '</div>';
+                html += '</div>';
+                html += '</div>';
+                break;
+            default:
+                html += '<div class="chat-box">';
+                html += '<div class="chat">';
+                html += '<div class="inner-text">' + text + '</div>';
+                html += '</div>';
+                html += '</div>';
+            break;
+        }
+        let chatContent = $('#chat-content');
+        chatContent.append(html);
+        chatContent.scrollTop(chatContent[0].scrollHeight);
     }
 </script>
 @endsection
