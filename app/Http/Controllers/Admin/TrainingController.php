@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Models\Assistant;
 use App\Models\Instruction;
-use \App\Http\Controllers\Traits\Openai;
+use App\Http\Controllers\Traits\Openai;
 
 class TrainingController extends Controller
 {
