@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Traits;
 
-trait Openai
+trait OpenAi
 {
     public function modifyAssistant($openaiApiKey, $assistant_id, $instructions)
     {

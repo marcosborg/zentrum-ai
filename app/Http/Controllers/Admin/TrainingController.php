@@ -8,11 +8,11 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Models\Assistant;
 use App\Models\Instruction;
-use App\Http\Controllers\Traits\Openai;
+use App\Http\Controllers\Traits\OpenAi;
 
 class TrainingController extends Controller
 {
-    use Openai;
+    use OpenAi;
 
     public function index()
     {
