@@ -53,6 +53,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
             Route::post('create-message', 'TrainingController@chatCreateMessage');
             Route::get('create-run/{assistant_id}/{thread_id}', 'TrainingController@chatCreateRun');
         });
+        Route::prefix('api')->group(function(){
+            Route::get('search/{assistant_id}/{search}', 'TrainingController@apiSearch');
+        });
     });
 
     // Project

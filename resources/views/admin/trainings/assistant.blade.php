@@ -212,7 +212,20 @@
                                     if (resp.data[0].role != 'user' && message.length > 0) {
                                         clearInterval(lm);
                                         addMessage('assistant', message);
-                                        message_card_footer.LoadingOverlay('hide');
+                                        $search = extractText(message);
+                                        if ($search){
+                                            message_card_footer.LoadingOverlay('hide');
+                                            //API
+                                            getProduct($search).then((resp) => {
+                                                if(resp.length > 0){
+                                                    //ASSEMBLE LINKS
+                                                } else {
+                                                    //NO RESULTS
+                                                }
+                                            });
+                                        } else {
+                                            message_card_footer.LoadingOverlay('hide');
+                                        }
                                     }
                                 });
                             }, 3000);
@@ -252,6 +265,26 @@
         let chatContent = $('#chat-content');
         chatContent.append(html);
         chatContent.scrollTop(chatContent[0].scrollHeight);
+    }
+
+    function extractText(str) {
+        const regex = /Estou a procurar: "([^"]*)"/;
+        const matches = str.match(regex);
+
+        if (matches && matches[1]) {
+            return matches[1];
+        } else {
+            return null;
+        }
+    }
+
+
+    getProduct = async (search) => {
+        try {
+            return await $.get('/admin/trainings/api/search/' + assistant_id + '/' + search);
+        } catch (error) {
+            return error;
+        }
     }
 </script>
 @endsection

@@ -9,10 +9,12 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Models\Assistant;
 use App\Models\Instruction;
 use App\Http\Controllers\Traits\OpenAi;
+use App\Http\Controllers\Traits\PrestashopApi;
 
 class TrainingController extends Controller
 {
     use OpenAi;
+    use PrestashopApi;
 
     public function index()
     {
@@ -127,6 +129,25 @@ class TrainingController extends Controller
         $openaiApiKey = $assistant->project->openai->openai_api_key;
         $assist_code = $assistant->assist_code;
         return $this->createRun($openaiApiKey, $assist_code, $thread_id);
+    }
+
+    public function apiSearch($assistant_id, $search)
+    {
+        $assistant = Assistant::find($assistant_id)->load('project');
+        $project = $assistant->project->name;
+
+        switch ($project) {
+            case 'Airbagszentrum':
+                $result = $this->zentrumSearch($search);
+                break;
+            case '':
+                break;
+            default:
+                # code...
+                break;
+        }
+
+        return $result;
     }
 
 }
