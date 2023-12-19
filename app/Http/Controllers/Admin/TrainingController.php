@@ -96,58 +96,76 @@ class TrainingController extends Controller
         $assistant_id = $request->assistant_id;
         $assistant = Assistant::find($assistant_id)->load('project.openai');
         $openaiApiKey = $assistant->project->openai->openai_api_key;
-        $content = $request->message;
         $assist_code = $assistant->assist_code;
+        $message = $request->message;
 
-        return $this->createThreadAndRun($openaiApiKey, $assist_code, $content);
+        return $this->createThreadAndRun($openaiApiKey, $assist_code, $message);
     }
 
-    public function chatListMessages($assistant_id, $thread_id)
+    public function chatListRunSteps($thread_id, $run_id)
     {
-        $assistant = Assistant::find($assistant_id)->load('project.openai');
-        $openaiApiKey = $assistant->project->openai->openai_api_key;
-
-        return $this->listMessages($openaiApiKey, $thread_id);
-
+        return $this->listRunSteps(env('OPENAI_API_KEY'), $thread_id, $run_id);
     }
 
-    public function chatCreateMessage(Request $request)
+    public function getRunStatus($thread_id, $run_id)
+    {
+        return $this->retrieveRun(env('OPENAI_API_KEY'), $thread_id, $run_id);
+    }
+
+    public function getMessages($thread_id)
+    {
+        return $this->listMessages(env('OPENAI_API_KEY'), $thread_id);
+    }
+
+    public function addMessage(Request $request)
     {
 
-        $assistant_id = $request->assistant_id;
-        $assistant = Assistant::find($assistant_id)->load('project.openai');
-        $openaiApiKey = $assistant->project->openai->openai_api_key;
-        $content = $request->content;
+        $openaiApiKey = env('OPENAI_API_KEY');
         $thread_id = $request->thread_id;
+        $message = $request->message;
 
-        return $this->createMessage($openaiApiKey, $thread_id, $content);
+        return $this->createMessage($openaiApiKey, $thread_id, $message);
     }
 
-    public function chatCreateRun($assistant_id, $thread_id)
+    public function runTheThread($assistant_id, $thread_id)
     {
-        $assistant = Assistant::find($assistant_id)->load('project.openai');
-        $openaiApiKey = $assistant->project->openai->openai_api_key;
-        $assist_code = $assistant->assist_code;
+
+        $openaiApiKey = env('OPENAI_API_KEY');
+        $assist_code = Assistant::find($assistant_id)->assist_code;
+
         return $this->createRun($openaiApiKey, $assist_code, $thread_id);
     }
 
     public function apiSearch($assistant_id, $search)
     {
         $assistant = Assistant::find($assistant_id)->load('project');
-        $project = $assistant->project->name;
 
-        switch ($project) {
-            case 'Airbagszentrum':
-                $result = $this->zentrumSearch($search);
+        switch ($assistant->project->name) {
+            case 'Techniczentrum':
+                $website = 'https://airbagszentrum.com';
                 break;
-            case '':
+            case 'Electriczentrum':
+                $website = 'https://airbagszentrum.com';
                 break;
             default:
-                # code...
+                $website = 'https://airbagszentrum.com';
                 break;
         }
 
-        return $result;
+        return $this->zentrumSearch($website, $search);
+
+    }
+
+    public function chatSubmitToolOutputsToRun(Request $request)
+    {
+
+        $openaiApiKey = env('OPENAI_API_KEY');
+        $thread_id = $request->thread_id;
+        $run_id = $request->run_id;
+        $tool_call_id = $request->tool_call_id;
+        $output = $request->output;
+
+        return $this->submitToolOutputsToRun($openaiApiKey, $thread_id, $run_id, $tool_call_id, $output);
     }
 
 }

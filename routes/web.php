@@ -49,11 +49,14 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
         });
         Route::prefix('chat')->group(function () {
             Route::post('create-thread-and-run', 'TrainingController@chatCreateThreadAndRun');
-            Route::get('list-messages/{assistant_id}/{thread_id}', 'TrainingController@chatListMessages');
-            Route::post('create-message', 'TrainingController@chatCreateMessage');
-            Route::get('create-run/{assistant_id}/{thread_id}', 'TrainingController@chatCreateRun');
+            Route::get('list-run-steps/{thread_id}/{run_id}', 'TrainingController@chatListRunSteps');
+            Route::get('get-run-status/{thread_id}/{run_id}', 'TrainingController@getRunStatus');
+            Route::get('get-messages/{thread_id}', 'TrainingController@getMessages');
+            Route::post('add-message', 'TrainingController@addMessage');
+            Route::get('run-the-thread/{assistant_id}/{thread_id}', 'TrainingController@runTheThread');
+            Route::post('submit-tool-outputs-to-run', 'TrainingController@chatSubmitToolOutputsToRun');
         });
-        Route::prefix('api')->group(function(){
+        Route::prefix('api')->group(function () {
             Route::get('search/{assistant_id}/{search}', 'TrainingController@apiSearch');
         });
     });

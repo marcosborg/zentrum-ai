@@ -99,6 +99,181 @@
         })
         loadInstructions();
     });
+
+    sendMessage = () => {
+        let message = $('#message-textarea').val();
+        $('#message-textarea').val('');
+        if(message.length > 0){
+            let loading = $('#message-card-footer');
+            loading.LoadingOverlay('show');
+            addMessageToContent ('user', message);
+            if(!thread_id){
+                createThreadAndRun(message).then((resp) => {
+                    thread_id = resp.thread_id;
+                    let run_id = resp.id;
+                    let interval = setInterval(() => {
+                        listRunSteps(thread_id, run_id).then((resp) => {
+                            let has_more = resp.has_more;
+                            getRunStatus(thread_id, run_id).then((resp) => {
+                                let status = resp.status;
+                                if(status == 'completed' && has_more == false){
+                                    clearInterval(interval);
+                                    getMessages(thread_id).then((resp) => {
+                                        message = resp.data[0].content[0].text.value;
+                                        addMessageToContent ('chat', message);
+                                        loading.LoadingOverlay('hide');
+                                    });
+                                }
+                            });
+                        });
+                    }, 2000);
+                });
+            } else {
+                addMessage(thread_id, message).then((resp) => {
+                    runTheThread (thread_id).then((resp) => {
+                        let run_id = resp.id;
+                        let interval = setInterval(() => {
+                            listRunSteps(thread_id, run_id).then((resp) => {
+                                let type = resp.data[0].type;
+                                if(type == 'message_creation') {
+                                    let has_more = resp.has_more;
+                                    getRunStatus(thread_id, run_id).then((resp) => {
+                                        let status = resp.status;
+                                        if(status == 'completed' && has_more == false){
+                                            clearInterval(interval);
+                                            getMessages(thread_id).then((resp) => {
+                                                message = resp.data[0].content[0].text.value;
+                                                addMessageToContent ('chat', message);
+                                                loading.LoadingOverlay('hide');
+                                            });
+                                        }
+                                    });
+                                } else if (type == 'tool_calls') {
+                                    clearInterval(interval);
+                                    let function_name = resp.data[0].step_details.tool_calls[0].function.name;
+                                    let data = JSON.parse(resp.data[0].step_details.tool_calls[0].function.arguments);
+                                    let tool_call_id = resp.data[0].step_details.tool_calls[0].id;
+                                    if(function_name == 'get_products'){
+                                        getProducts(data.symbol).then((resp) => {
+                                            let output = JSON.stringify(resp);
+                                            submitToolOutputsToRun(thread_id, run_id, tool_call_id, output).then((resp) => {
+                                                let run_id = resp.id;
+                                                let interval = setInterval(() => {
+                                                    getRunStatus(thread_id, run_id).then((resp) => {
+                                                        status = resp.status;
+                                                        if(status == 'completed'){
+                                                            clearInterval(interval);
+                                                            getMessages(thread_id).then((resp) => {
+                                                                message = resp.data[0].content[0].text.value;
+                                                                //message = convertUrlsToLinks(message);
+                                                                addMessageToContent ('chat', message);
+                                                                loading.LoadingOverlay('hide');
+                                                            });
+                                                        }
+                                                    });
+                                                }, 2000);
+                                            });
+                                        });
+                                    }
+                                }
+                            });
+                        }, 2000);
+                    });
+                });
+            }
+        }
+    }
+
+    submitToolOutputsToRun = (thread_id, run_id, tool_call_id, output) => {
+
+        let data = {
+            thread_id: thread_id,
+            run_id: run_id,
+            tool_call_id: tool_call_id,
+            output: output
+        }
+
+        return new Promise((resolve, reject) => {
+            $.post({
+                url: '/admin/trainings/chat/submit-tool-outputs-to-run',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: data,
+                success: (resp) => {
+                    resolve(resp);
+                },
+                error: (err) => {
+                    reject(err);
+                }
+            });
+        });
+
+    }
+
+    runTheThread = async (thread_id) => {
+        return $.get('/admin/trainings/chat/run-the-thread/' + assistant_id + '/' + thread_id);
+    }
+
+    addMessage = async (thread_id, message) => {
+        let data = {
+            thread_id: thread_id,
+            message: message
+        }
+        return new Promise((resolve, reject) => {
+            $.post({
+                url: '/admin/trainings/chat/add-message',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: data,
+                success: (resp) => {
+                    resolve(resp);
+                },
+                error: (err) => {
+                    reject(err);
+                }
+            });
+        });
+    }
+
+    getMessages = async (thread_id) => {
+        return $.get('/admin/trainings/chat/get-messages/' + thread_id);
+    }
+
+    createThreadAndRun = async () => {
+        try {
+            let data = {
+                assistant_id: assistant_id
+            };
+            return new Promise((resolve, reject) => {
+                $.post({
+                    url: '/admin/trainings/chat/create-thread-and-run',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: data,
+                    success: (resp) => {
+                        resolve(resp);
+                    },
+                    error: (jqXHR, textStatus, errorThrown) => {
+                        reject(errorThrown);
+                    }
+                });
+            });
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    listRunSteps = async (thread_id, run_id) => {
+        return $.get('/admin/trainings/chat/list-run-steps/' + thread_id + '/' + run_id);
+    }
+
+    getRunStatus = async (thread_id, run_id) => {
+        return $.get('/admin/trainings/chat/get-run-status/' + thread_id + '/' + run_id);
+    }
+    
     loadInstructions = () => {
         $.LoadingOverlay('show');
         $.get('/admin/trainings/instructions/load/' + assistant_id).then((resp) => {
@@ -106,6 +281,7 @@
             $.LoadingOverlay('hide');
         });
     }
+
     deleteInstruction = (instruction_id) => {
         Swal.fire({
             title: "Are you sure?",
@@ -128,6 +304,7 @@
             }
         });
     }
+
     modifyAssistant = () => {
         let button = $('#modify-assistant-button');
         button.LoadingOverlay('show');
@@ -155,86 +332,7 @@
             }
         });
     }
-    sendMessage = () => {
-        let message = $('#message-textarea').val();
-        if(message.length > 0) {
-            $('#message-textarea').val('');
-            addMessage('user', message);
-            //OVERLAY
-            let message_card_footer = $('#message-card-footer');
-            message_card_footer.LoadingOverlay('show');
-            let data = {
-                assistant_id: assistant_id,
-                message: message
-            }
-            if(!thread_id){
-                //Create thread and run
-                $.post({
-                    url: '/admin/trainings/chat/create-thread-and-run',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    data: data,
-                    success: (resp) => {
-                        thread_id = resp.thread_id;
-                        //List messages
-                        let lm = setInterval(() => {
-                            listMessages(thread_id).then((resp) => {
-                            message = resp.data[0].content[0].text.value;
-                            if (resp.data[0].role != 'user' && message.length > 0) {
-                                clearInterval(lm);
-                                addMessage('assistant', message);
-                                message_card_footer.LoadingOverlay('hide');
-                            }
-                        });
-                        }, 3000);
-                    }
-                });
-            } else {
-                //Create message
-                let data = {
-                    content: message,
-                    thread_id: thread_id,
-                    assistant_id: assistant_id
-                }
-                $.post({
-                    url: '/admin/trainings/chat/create-message',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    data: data,
-                    success: () => {
-                        $.get('/admin/trainings/chat/create-run/' + assistant_id + '/' + thread_id).then(() => {
-                            //List messages
-                            let lm = setInterval(() => {
-                                listMessages(thread_id).then((resp) => {
-                                    message = resp.data[0].content[0].text.value;
-                                    if (resp.data[0].role != 'user' && message.length > 0) {
-                                        clearInterval(lm);
-                                        addMessage('assistant', message);
-                                        $search = extractText(message);
-                                        if ($search){
-                                            message_card_footer.LoadingOverlay('hide');
-                                            //API
-                                            getProduct($search).then((resp) => {
-                                                if(resp.length > 0){
-                                                    //ASSEMBLE LINKS
-                                                } else {
-                                                    //NO RESULTS
-                                                }
-                                            });
-                                        } else {
-                                            message_card_footer.LoadingOverlay('hide');
-                                        }
-                                    }
-                                });
-                            }, 3000);
-                        });
-                    }
-                });
-            }
-        }
-    }
+
     listMessages = async () => {
         try {
             const messages = await $.get('/admin/trainings/chat/list-messages/' + assistant_id + '/' + thread_id);
@@ -244,20 +342,28 @@
         }
     }
 
-    addMessage = (role, text) => {
+    getProducts = async (search) => {
+        try {
+            return await $.get('/admin/trainings/api/search/' + assistant_id + '/' + search);
+        } catch (error) {
+            return error;
+        }
+    }
+
+    addMessageToContent = (role, message) => {
         let html = '';
         switch (role) {
             case 'user':
                 html += '<div class="user-box">';
                 html += '<div class="user">';
-                html += '<div class="inner-text">' + text + '</div>';
+                html += '<div class="inner-text">' + message + '</div>';
                 html += '</div>';
                 html += '</div>';
                 break;
             default:
                 html += '<div class="chat-box">';
                 html += '<div class="chat">';
-                html += '<div class="inner-text">' + text + '</div>';
+                html += '<div class="inner-text">' + message + '</div>';
                 html += '</div>';
                 html += '</div>';
             break;
@@ -267,25 +373,11 @@
         chatContent.scrollTop(chatContent[0].scrollHeight);
     }
 
-    function extractText(str) {
-        const regex = /Estou a procurar: "([^"]*)"/;
-        const matches = str.match(regex);
-
-        if (matches && matches[1]) {
-            return matches[1];
-        } else {
-            return null;
-        }
+    function convertUrlsToLinks(text) {
+        const urlPattern = /(https?:\/\/[^\s]+)/g;
+        return text.replace(urlPattern, '<a href="$1" target="_blank">$1</a>');
     }
 
-
-    getProduct = async (search) => {
-        try {
-            return await $.get('/admin/trainings/api/search/' + assistant_id + '/' + search);
-        } catch (error) {
-            return error;
-        }
-    }
 </script>
 @endsection
 

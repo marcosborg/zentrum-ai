@@ -27,20 +27,8 @@ trait OpenAi
         return json_decode($response);
     }
 
-    public function createThreadAndRun($openaiApiKey, $assistant_id, $content)
+    public function createThreadAndRun($openaiApiKey, $assistant_code, $message)
     {
-
-        $data = [
-            'assistant_id' => $assistant_id,
-            'thread' => [
-                'messages' => [
-                    [
-                        'role' => 'user',
-                        'content' => $content
-                    ]
-                ]
-            ]
-        ];
 
         $curl = curl_init();
 
@@ -53,7 +41,17 @@ trait OpenAi
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => json_encode($data),
+            CURLOPT_POSTFIELDS => '{
+              "assistant_id": "' . $assistant_code . '",
+              "thread": {
+                "messages": [
+                    {
+                      "role": "user", 
+                      "content": "' . $message . '"
+                    }
+                ]
+              }
+        }',
             CURLOPT_HTTPHEADER => array(
                 'Content-Type: application/json',
                 'OpenAI-Beta: assistants=v1',
@@ -64,6 +62,64 @@ trait OpenAi
         $response = curl_exec($curl);
 
         curl_close($curl);
+
+        return json_decode($response);
+
+    }
+
+    public function listRunSteps($openaiApiKey, $thread_id, $run_id)
+    {
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://api.openai.com/v1/threads/' . $thread_id . '/runs/' . $run_id . '/steps',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/json',
+                'OpenAI-Beta: assistants=v1',
+                'Authorization: Bearer ' . $openaiApiKey
+            ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        return json_decode($response);
+
+    }
+
+    public function retrieveRun($openaiApiKey, $thread_id, $run_id)
+    {
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://api.openai.com/v1/threads/' . $thread_id . '/runs/' . $run_id,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_HTTPHEADER => array(
+                'OpenAI-Beta: assistants=v1',
+                'Authorization: Bearer ' . $openaiApiKey
+            ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
         return json_decode($response);
 
     }
@@ -97,7 +153,7 @@ trait OpenAi
 
     }
 
-    public function createMessage($openaiApiKey, $thread_id, $content)
+    public function createMessage($openaiApiKey, $thread_id, $message)
     {
 
         $curl = curl_init();
@@ -112,8 +168,8 @@ trait OpenAi
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => '{
-            "role": "user",
-            "content": "' . $content . '"
+              "role": "user",
+              "content": "' . $message . '"
             }',
             CURLOPT_HTTPHEADER => array(
                 'Content-Type: application/json',
@@ -130,7 +186,7 @@ trait OpenAi
 
     }
 
-    public function createRun($openaiApiKey, $assistant_id, $thread_id)
+    public function createRun($openaiApiKey, $assist_code, $thread_id)
     {
 
         $curl = curl_init();
@@ -144,9 +200,7 @@ trait OpenAi
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => '{
-                "assistant_id": "' . $assistant_id . '"
-            }',
+            CURLOPT_POSTFIELDS => '{"assistant_id": "' . $assist_code . '"}',
             CURLOPT_HTTPHEADER => array(
                 'Content-Type: application/json',
                 'OpenAI-Beta: assistants=v1',
@@ -161,4 +215,46 @@ trait OpenAi
         return json_decode($response);
 
     }
+
+    public function submitToolOutputsToRun($openaiApiKey, $thread_id, $run_id, $tool_call_id, $output)
+    {
+
+        $data = [
+            "tool_outputs" => [
+                [
+                    "tool_call_id" => $tool_call_id,
+                    "output" => $output
+                ]
+            ]
+        ];
+
+        $data = json_encode($data);
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://api.openai.com/v1/threads/' . $thread_id . '/runs/' . $run_id . '/submit_tool_outputs',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => $data,
+            CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/json',
+                'OpenAI-Beta: assistants=v1',
+                'Authorization: Bearer ' . $openaiApiKey
+            ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        return json_decode($response);
+
+    }
+
 }

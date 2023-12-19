@@ -5,14 +5,14 @@ namespace App\Http\Controllers\Traits;
 trait PrestashopApi
 {
 
-    public function zentrumSearch($search)
+    public function zentrumSearch($website, $search)
     {
         $encodedSearch = urlencode($search);
 
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://airbagszentrum.com/api/search?query=' . $encodedSearch . '&language=1&output_format=JSON',
+            CURLOPT_URL => $website . '/api/search?query=' . $encodedSearch . '&language=1&output_format=JSON&display=full',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -29,7 +29,7 @@ trait PrestashopApi
 
         curl_close($curl);
 
-        return  json_decode($response);
+        return json_decode($response);
 
 
     }
