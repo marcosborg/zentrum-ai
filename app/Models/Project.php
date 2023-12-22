@@ -36,4 +36,9 @@ class Project extends Model
     {
         return $this->belongsTo(Openai::class, 'openai_id');
     }
+
+    public function assistant()
+    {
+        return $this->hasOne(Assistant::class);
+    }
 }

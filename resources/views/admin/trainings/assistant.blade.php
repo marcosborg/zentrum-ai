@@ -165,7 +165,6 @@
                                                             clearInterval(interval);
                                                             getMessages(thread_id).then((resp) => {
                                                                 message = resp.data[0].content[0].text.value;
-                                                                //message = convertUrlsToLinks(message);
                                                                 addMessageToContent ('chat', message);
                                                                 loading.LoadingOverlay('hide');
                                                             });
@@ -371,11 +370,6 @@
         let chatContent = $('#chat-content');
         chatContent.append(html);
         chatContent.scrollTop(chatContent[0].scrollHeight);
-    }
-
-    function convertUrlsToLinks(text) {
-        const urlPattern = /(https?:\/\/[^\s]+)/g;
-        return text.replace(urlPattern, '<a href="$1" target="_blank">$1</a>');
     }
 
 </script>

@@ -1,6 +1,7 @@
 <?php
 
 Route::redirect('/', '/login');
+
 Route::get('/home', function () {
     if (session('status')) {
         return redirect()->route('admin.home')->with('status', session('status'));
@@ -65,6 +66,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::delete('projects/destroy', 'ProjectController@massDestroy')->name('projects.massDestroy');
     Route::resource('projects', 'ProjectController');
 });
+
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {
     // Change password
     if (file_exists(app_path('Http/Controllers/Auth/ChangePasswordController.php'))) {
@@ -73,4 +75,20 @@ Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 
         Route::post('profile', 'ChangePasswordController@updateProfile')->name('password.updateProfile');
         Route::post('profile/destroy', 'ChangePasswordController@destroy')->name('password.destroyProfile');
     }
+});
+
+Route::prefix('chat')->group(function () {
+    Route::get('/', 'WebsiteController@index');
+    Route::get('create-assistant/{project_name}', 'ChatController@chatCreateAssistant');
+    Route::post('create-thread-and-run', 'ChatController@chatCreateThreadAndRun');
+    Route::get('list-run-steps/{thread_id}/{run_id}', 'ChatController@chatListRunSteps');
+    Route::get('get-run-status/{thread_id}/{run_id}', 'ChatController@getRunStatus');
+    Route::get('get-messages/{thread_id}', 'ChatController@getMessages');
+    Route::post('add-message', 'ChatController@addMessage');
+    Route::get('run-the-thread/{assistant_id}/{thread_id}', 'ChatController@runTheThread');
+    Route::post('submit-tool-outputs-to-run', 'ChatController@chatSubmitToolOutputsToRun');
+});
+
+Route::prefix('api')->group(function () {
+    Route::get('search/{assistant_id}/{search}', 'ChatController@apiSearch');
 });
