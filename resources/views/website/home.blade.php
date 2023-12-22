@@ -72,7 +72,7 @@
 
         .card-body {
             overflow-y: scroll;
-            height: 40vh;
+            height: 248px;
         }
     </style>
 </head>
