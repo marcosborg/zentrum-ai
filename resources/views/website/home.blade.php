@@ -32,6 +32,7 @@
 
         .card {
             border: solid 2px cornflowerblue;
+            margin: 0 !important;
         }
 
         .chat {
