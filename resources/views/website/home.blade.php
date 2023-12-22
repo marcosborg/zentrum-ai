@@ -13,11 +13,13 @@
             background-color: cornflowerblue;
             color: white;
             font-weight: bold;
+            border-radius: 0 !important;
         }
 
         .card-footer {
             background-color: cornflowerblue;
             color: white;
+            border-radius: 0 !important;
         }
 
         button.btn.btn-success {
@@ -32,7 +34,6 @@
 
         .card {
             border: solid 2px cornflowerblue;
-            margin: 0 !important;
         }
 
         .chat {
@@ -79,7 +80,7 @@
 
 <body>
 
-    <div class="card m-2">
+    <div class="card rounded-0">
         <div class="card-header">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-dots"
                 viewBox="0 0 16 16">
