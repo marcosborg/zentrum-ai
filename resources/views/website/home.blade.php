@@ -193,6 +193,27 @@
                                                 });
                                             });
                                         }
+                                        if(function_name == 'send_email'){
+                                            console.log(data);
+                                            sendEmail(data).then(() => {
+                                                submitToolOutputsToRun(thread_id, run_id, tool_call_id, true).then((resp) => {
+                                                    let run_id = resp.id;
+                                                    let interval = setInterval(() => {
+                                                        getRunStatus(thread_id, run_id).then((resp) => {
+                                                            status = resp.status;
+                                                            if(status == 'completed'){
+                                                                clearInterval(interval);
+                                                                getMessages(thread_id).then((resp) => {
+                                                                    message = resp.data[0].content[0].text.value;
+                                                                    addMessageToContent ('chat', message);
+                                                                    message_textarea.LoadingOverlay('hide');
+                                                                });
+                                                            }
+                                                        });
+                                                    }, 2000);
+                                                });
+                                            });
+                                        }
                                     }
                                 });
                             }, 2000);
@@ -294,6 +315,19 @@
                 return await $.get('/api/search/' + assistant_id + '/' + search);
             } catch (error) {
                 return error;
+            }
+        }
+        sendEmail = async (data) => {
+            try {
+                return $.post({
+                    url: '/api/send-email',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: data
+                });
+            } catch (error) {
+                console.log(error);
             }
         }
         addMessageToContent = (role, message) => {

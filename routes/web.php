@@ -92,4 +92,5 @@ Route::prefix('chat')->group(function () {
 
 Route::prefix('api')->group(function () {
     Route::get('search/{assistant_id}/{search}', 'ChatController@apiSearch');
+    Route::post('send-email', 'ChatController@sendEmail');
 });

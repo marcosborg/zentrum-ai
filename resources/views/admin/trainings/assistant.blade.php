@@ -176,11 +176,6 @@
                                     }
                                     if(function_name == 'send_email'){
                                         addMessageToContent ('chat', 'A enviar. Aguarde um momento.');
-                                        console.log({
-                                            data: data,
-                                            tool_call_id: tool_call_id,
-                                            function_name: function_name
-                                        });
                                         sendEmail(data).then(() => {
                                             submitToolOutputsToRun(thread_id, run_id, tool_call_id, true).then((resp) => {
                                                 let run_id = resp.id;

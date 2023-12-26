@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use \App\Models\Assistant;
 use \App\Http\Controllers\Traits\OpenAi;
 use \App\Http\Controllers\Traits\PrestashopApi;
+use Illuminate\Support\Facades\Notification;
+use \App\Notifications\ChatContact;
 
 class ChatController extends Controller
 {
@@ -117,6 +119,14 @@ class ChatController extends Controller
 
         return $this->zentrumSearch($website, $search);
 
+    }
+
+    public function sendEmail(Request $request)
+    {
+        $data = $request->data;
+
+        Notification::route('mail', env('COMERCIAL_EMAIL'))
+            ->notify(new ChatContact($data));
     }
 
     public function chatSubmitToolOutputsToRun(Request $request)
