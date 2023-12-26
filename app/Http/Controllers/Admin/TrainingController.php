@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Notifications\ChatContact;
 use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -10,6 +11,7 @@ use App\Models\Assistant;
 use App\Models\Instruction;
 use App\Http\Controllers\Traits\OpenAi;
 use App\Http\Controllers\Traits\PrestashopApi;
+use Illuminate\Support\Facades\Notification;
 
 class TrainingController extends Controller
 {
@@ -166,6 +168,14 @@ class TrainingController extends Controller
         $output = $request->output;
 
         return $this->submitToolOutputsToRun($openaiApiKey, $thread_id, $run_id, $tool_call_id, $output);
+    }
+
+    public function sendEmail(Request $request)
+    {
+        $data = $request->data;
+
+        Notification::route('mail', 'm.borges.mail@gmail.com')
+            ->notify(new ChatContact($data));
     }
 
 }

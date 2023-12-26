@@ -56,6 +56,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
             Route::post('add-message', 'TrainingController@addMessage');
             Route::get('run-the-thread/{assistant_id}/{thread_id}', 'TrainingController@runTheThread');
             Route::post('submit-tool-outputs-to-run', 'TrainingController@chatSubmitToolOutputsToRun');
+            Route::post('send-email', 'TrainingController@sendEmail');
         });
         Route::prefix('api')->group(function () {
             Route::get('search/{assistant_id}/{search}', 'TrainingController@apiSearch');

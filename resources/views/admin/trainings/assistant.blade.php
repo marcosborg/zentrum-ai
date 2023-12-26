@@ -174,6 +174,32 @@
                                             });
                                         });
                                     }
+                                    if(function_name == 'send_email'){
+                                        addMessageToContent ('chat', 'A enviar. Aguarde um momento.');
+                                        console.log({
+                                            data: data,
+                                            tool_call_id: tool_call_id,
+                                            function_name: function_name
+                                        });
+                                        sendEmail(data).then(() => {
+                                            submitToolOutputsToRun(thread_id, run_id, tool_call_id, true).then((resp) => {
+                                                let run_id = resp.id;
+                                                let interval = setInterval(() => {
+                                                    getRunStatus(thread_id, run_id).then((resp) => {
+                                                        status = resp.status;
+                                                        if(status == 'completed'){
+                                                            clearInterval(interval);
+                                                            getMessages(thread_id).then((resp) => {
+                                                                message = resp.data[0].content[0].text.value;
+                                                                addMessageToContent ('chat', message);
+                                                                loading.LoadingOverlay('hide');
+                                                            });
+                                                        }
+                                                    });
+                                                }, 2000);
+                                            });
+                                        });
+                                    }
                                 }
                             });
                         }, 2000);
@@ -346,6 +372,20 @@
             return await $.get('/admin/trainings/api/search/' + assistant_id + '/' + search);
         } catch (error) {
             return error;
+        }
+    }
+
+    sendEmail = async (data) => {
+        try {
+            return $.post({
+                url: '/admin/trainings/chat/send-email',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: data
+            });
+        } catch (error) {
+            console.log(error);
         }
     }
 
