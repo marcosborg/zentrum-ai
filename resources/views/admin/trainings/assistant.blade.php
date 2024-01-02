@@ -67,8 +67,11 @@
 @section('scripts')
 @parent
 <script>
+    const project = "{{ $assistant->project->name }}";
+    const assistant_name = "{{ $assistant->name }}";
     const assistant_id = {{ $assistant->id }};
     var thread_id = null;
+    var log_id = null;
     $(() => {
         $('#instructions_create').ajaxForm({
             beforeSubmit: () => {
@@ -106,6 +109,11 @@
         if(message.length > 0){
             let loading = $('#message-card-footer');
             loading.LoadingOverlay('show');
+            addMessageToLog('user', message).then((resp) => {
+                console.log(resp);
+            }, (error) => {
+                console.log(error);
+            });
             addMessageToContent ('user', message);
             if(!thread_id){
                 createThreadAndRun(message).then((resp) => {
@@ -406,6 +414,27 @@
         chatContent.append(html);
         chatContent.scrollTop(chatContent[0].scrollHeight);
     }
+
+    addMessageToLog = async (role, message) => {
+        let data = {
+            project: project,
+            assistant: assistant_name,
+            log_id: log_id,
+            role: role,
+            message: message
+        }
+        try {
+            return $.post({
+                url: '/admin/trainings/chat/log',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: data
+            });          
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
 </script>
 @endsection

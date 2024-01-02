@@ -57,6 +57,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
             Route::get('run-the-thread/{assistant_id}/{thread_id}', 'TrainingController@runTheThread');
             Route::post('submit-tool-outputs-to-run', 'TrainingController@chatSubmitToolOutputsToRun');
             Route::post('send-email', 'TrainingController@sendEmail');
+            Route::post('log', 'TrainingController@log');
         });
         Route::prefix('api')->group(function () {
             Route::get('search/{assistant_id}/{search}', 'TrainingController@apiSearch');
@@ -66,6 +67,14 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     // Project
     Route::delete('projects/destroy', 'ProjectController@massDestroy')->name('projects.massDestroy');
     Route::resource('projects', 'ProjectController');
+
+    // Log
+    Route::delete('logs/destroy', 'LogController@massDestroy')->name('logs.massDestroy');
+    Route::resource('logs', 'LogController');
+
+    // Log Message
+    Route::delete('log-messages/destroy', 'LogMessageController@massDestroy')->name('log-messages.massDestroy');
+    Route::resource('log-messages', 'LogMessageController');
 });
 
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {

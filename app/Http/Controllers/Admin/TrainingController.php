@@ -178,4 +178,9 @@ class TrainingController extends Controller
             ->notify(new ChatContact($data));
     }
 
+    public function log(Request $request)
+    {
+        return $request;
+    }
+
 }

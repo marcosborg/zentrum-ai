@@ -114,6 +114,7 @@
         const message_textarea = $('#message-textarea');
         var thread_id = null;
         var run_id = null;
+        var log_id = null;
         $(() => {
             setTimeout(() => {
                 addMessageToContent('chat', first_message);
@@ -354,6 +355,14 @@
             chat_container.append(html);
             chat_container.scrollTop(chat_container[0].scrollHeight);
         }
+        //HISTORIC
+        storeNewLog = async (project, message) => {
+
+        }
+        storeLogMessage = (project, log_id, role, message) => {
+
+        }
+        ////////////////////////////////
     </script>
 
 </body>

@@ -107,6 +107,38 @@
                 </a>
             </li>
         @endcan
+        @can('log_menu_access')
+            <li class="c-sidebar-nav-dropdown {{ request()->is("admin/logs*") ? "c-show" : "" }} {{ request()->is("admin/log-messages*") ? "c-show" : "" }}">
+                <a class="c-sidebar-nav-dropdown-toggle" href="#">
+                    <i class="fa-fw far fa-comments c-sidebar-nav-icon">
+
+                    </i>
+                    {{ trans('cruds.logMenu.title') }}
+                </a>
+                <ul class="c-sidebar-nav-dropdown-items">
+                    @can('log_access')
+                        <li class="c-sidebar-nav-item">
+                            <a href="{{ route("admin.logs.index") }}" class="c-sidebar-nav-link {{ request()->is("admin/logs") || request()->is("admin/logs/*") ? "c-active" : "" }}">
+                                <i class="fa-fw far fa-comments c-sidebar-nav-icon">
+
+                                </i>
+                                {{ trans('cruds.log.title') }}
+                            </a>
+                        </li>
+                    @endcan
+                    @can('log_message_access')
+                        <li class="c-sidebar-nav-item">
+                            <a href="{{ route("admin.log-messages.index") }}" class="c-sidebar-nav-link {{ request()->is("admin/log-messages") || request()->is("admin/log-messages/*") ? "c-active" : "" }}">
+                                <i class="fa-fw far fa-comment c-sidebar-nav-icon">
+
+                                </i>
+                                {{ trans('cruds.logMessage.title') }}
+                            </a>
+                        </li>
+                    @endcan
+                </ul>
+            </li>
+        @endcan
         @if(file_exists(app_path('Http/Controllers/Auth/ChangePasswordController.php')))
             @can('profile_password_edit')
                 <li class="c-sidebar-nav-item">
