@@ -9,6 +9,8 @@ use \App\Http\Controllers\Traits\OpenAi;
 use \App\Http\Controllers\Traits\PrestashopApi;
 use Illuminate\Support\Facades\Notification;
 use \App\Notifications\ChatContact;
+use App\Models\Log;
+use App\Models\LogMessage;
 
 class ChatController extends Controller
 {
@@ -139,5 +141,29 @@ class ChatController extends Controller
         $output = $request->output;
 
         return $this->submitToolOutputsToRun($openaiApiKey, $thread_id, $run_id, $tool_call_id, $output);
+    }
+
+    public function log(Request $request)
+    {
+        $log_id = $request->log_id;
+        $project = $request->project;
+        $role = $request->role;
+        $message = $request->message;
+
+        if (!$log_id) {
+            $log = new Log;
+            $log->project = $project;
+            $log->save();
+            $log_id = $log->id;
+        }
+
+        $log_message = new LogMessage;
+        $log_message->log_id = $log_id;
+        $log_message->role = $role;
+        $log_message->message = $message;
+        $log_message->save();
+
+        return $log_message;
+
     }
 }

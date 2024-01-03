@@ -136,6 +136,16 @@
                             </a>
                         </li>
                     @endcan
+                    @can('log_history_access')
+                        <li class="c-sidebar-nav-item">
+                            <a href="{{ route("admin.log-histories.index") }}" class="c-sidebar-nav-link {{ request()->is("admin/log-histories") || request()->is("admin/log-histories/*") ? "c-active" : "" }}">
+                                <i class="fa-fw fas fa-history c-sidebar-nav-icon">
+
+                                </i>
+                                {{ trans('cruds.logHistory.title') }}
+                            </a>
+                        </li>
+                    @endcan
                 </ul>
             </li>
         @endcan

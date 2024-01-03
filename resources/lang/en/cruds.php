@@ -189,5 +189,9 @@ return [
             'deleted_at_helper' => ' ',
         ],
     ],
+    'logHistory' => [
+        'title'          => 'Log History',
+        'title_singular' => 'Log History',
+    ],
 
 ];

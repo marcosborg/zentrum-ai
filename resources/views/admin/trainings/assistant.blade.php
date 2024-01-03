@@ -68,7 +68,6 @@
 @parent
 <script>
     const project = "{{ $assistant->project->name }}";
-    const assistant_name = "{{ $assistant->name }}";
     const assistant_id = {{ $assistant->id }};
     var thread_id = null;
     var log_id = null;
@@ -110,7 +109,7 @@
             let loading = $('#message-card-footer');
             loading.LoadingOverlay('show');
             addMessageToLog('user', message).then((resp) => {
-                console.log(resp);
+                log_id = resp.log_id;
             }, (error) => {
                 console.log(error);
             });
@@ -128,6 +127,7 @@
                                     clearInterval(interval);
                                     getMessages(thread_id).then((resp) => {
                                         message = resp.data[0].content[0].text.value;
+                                        addMessageToLog('chat', message);
                                         addMessageToContent ('chat', message);
                                         loading.LoadingOverlay('hide');
                                     });
@@ -151,6 +151,7 @@
                                             clearInterval(interval);
                                             getMessages(thread_id).then((resp) => {
                                                 message = resp.data[0].content[0].text.value;
+                                                addMessageToLog('chat', message);
                                                 addMessageToContent ('chat', message);
                                                 loading.LoadingOverlay('hide');
                                             });
@@ -418,7 +419,6 @@
     addMessageToLog = async (role, message) => {
         let data = {
             project: project,
-            assistant: assistant_name,
             log_id: log_id,
             role: role,
             message: message

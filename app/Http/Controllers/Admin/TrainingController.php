@@ -12,6 +12,8 @@ use App\Models\Instruction;
 use App\Http\Controllers\Traits\OpenAi;
 use App\Http\Controllers\Traits\PrestashopApi;
 use Illuminate\Support\Facades\Notification;
+use App\Models\Log;
+use App\Models\LogMessage;
 
 class TrainingController extends Controller
 {
@@ -180,7 +182,26 @@ class TrainingController extends Controller
 
     public function log(Request $request)
     {
-        return $request;
+        $log_id = $request->log_id;
+        $project = $request->project;
+        $role = $request->role;
+        $message = $request->message;
+
+        if (!$log_id) {
+            $log = new Log;
+            $log->project = $project;
+            $log->save();
+            $log_id = $log->id;
+        }
+
+        $log_message = new LogMessage;
+        $log_message->log_id = $log_id;
+        $log_message->role = $role;
+        $log_message->message = $message;
+        $log_message->save();
+
+        return $log_message;
+
     }
 
 }

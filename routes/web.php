@@ -75,6 +75,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     // Log Message
     Route::delete('log-messages/destroy', 'LogMessageController@massDestroy')->name('log-messages.massDestroy');
     Route::resource('log-messages', 'LogMessageController');
+
+    // Log History
+    Route::prefix('log-histories')->group(function () {
+        Route::get('/', 'LogHistoryController@index')->name('log-histories.index');
+        Route::get('history/{log_id}', 'LogHistoryController@history');
+    });
 });
 
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {
@@ -97,6 +103,7 @@ Route::prefix('chat')->group(function () {
     Route::post('add-message', 'ChatController@addMessage');
     Route::get('run-the-thread/{assistant_id}/{thread_id}', 'ChatController@runTheThread');
     Route::post('submit-tool-outputs-to-run', 'ChatController@chatSubmitToolOutputsToRun');
+    Route::post('log', 'ChatController@log');
 });
 
 Route::prefix('api')->group(function () {

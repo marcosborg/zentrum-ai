@@ -112,6 +112,7 @@
         const chat_container = $('#chat-container');
         const assistant_id = 3;
         const message_textarea = $('#message-textarea');
+        const project = 'Airbagszentrum';
         var thread_id = null;
         var run_id = null;
         var log_id = null;
@@ -123,6 +124,11 @@
         sendMessage = () => {
             let message = message_textarea.val();
             if(message.length > 0) {
+                addMessageToLog('user', message).then((resp) => {
+                    log_id = resp.log_id;
+                }, (error) => {
+                    console.log(error);
+                });
                 addMessageToContent('user', message);
                 message_textarea.val('');
                 message_textarea.LoadingOverlay('show');
@@ -139,6 +145,7 @@
                                         clearInterval(interval);
                                         getMessages(thread_id).then((resp) => {
                                             message = resp.data[0].content[0].text.value;
+                                            addMessageToLog('chat', message);
                                             addMessageToContent ('chat', message);
                                             message_textarea.LoadingOverlay('hide');
                                         });
@@ -162,6 +169,7 @@
                                                 clearInterval(interval);
                                                 getMessages(thread_id).then((resp) => {
                                                     message = resp.data[0].content[0].text.value;
+                                                    addMessageToLog('chat', message);
                                                     addMessageToContent ('chat', message);
                                                     message_textarea.LoadingOverlay('hide');
                                                 });
@@ -355,14 +363,25 @@
             chat_container.append(html);
             chat_container.scrollTop(chat_container[0].scrollHeight);
         }
-        //HISTORIC
-        storeNewLog = async (project, message) => {
-
+        addMessageToLog = async (role, message) => {
+        let data = {
+            project: project,
+            log_id: log_id,
+            role: role,
+            message: message
         }
-        storeLogMessage = (project, log_id, role, message) => {
-
+        try {
+            return $.post({
+                url: '/chat/log',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: data
+            });          
+        } catch (error) {
+            console.log(error);
         }
-        ////////////////////////////////
+    };
     </script>
 
 </body>
