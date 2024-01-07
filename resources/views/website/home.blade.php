@@ -110,9 +110,9 @@
         const first_message = 'Em que posso ajudar?';
         const waiting_message = 'Peço que aguarde enquanto procuro. Pode demorar um pouco.';
         const chat_container = $('#chat-container');
-        const assistant_id = 3;
+        const assistant_id = {{ $assistant->id }};
         const message_textarea = $('#message-textarea');
-        const project = 'Airbagszentrum';
+        const project = '{{ $assistant->project->name }}';
         var thread_id = null;
         var run_id = null;
         var log_id = null;

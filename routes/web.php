@@ -94,7 +94,7 @@ Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 
 });
 
 Route::prefix('chat')->group(function () {
-    Route::get('/', 'WebsiteController@index');
+    Route::get('/assistant/{assistant_id}', 'WebsiteController@assistant');
     Route::get('create-assistant/{project_name}', 'ChatController@chatCreateAssistant');
     Route::post('create-thread-and-run', 'ChatController@chatCreateThreadAndRun');
     Route::get('list-run-steps/{thread_id}/{run_id}', 'ChatController@chatListRunSteps');

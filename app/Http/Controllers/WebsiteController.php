@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Assistant;
 use Illuminate\Http\Request;
 
 class WebsiteController extends Controller
 {
 
-    public function index()
+    public function assistant($assistant_id)
     {
-        return view('website.home');
+
+        $assistant = Assistant::find($assistant_id)->load('project');
+
+        return view('website.home', compact('assistant'));
     }
 
 }
