@@ -10,14 +10,14 @@
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <style>
         .card-header {
-            background-color: cornflowerblue;
+            background-color: #21ade3;
             color: white;
             font-weight: bold;
             border-radius: 0 !important;
         }
 
         .card-footer {
-            background-color: cornflowerblue;
+            background-color: #21ade3;
             color: white;
             border-radius: 0 !important;
         }
@@ -33,23 +33,32 @@
         }
 
         .card {
-            border: solid 2px cornflowerblue;
+            border: none;
+        }
+
+        .card-footer {
+            padding: 0 !important;
+            background: transparent;
+        }
+
+        textarea#message-textarea {
+            border: none;
         }
 
         .chat {
-            background-color: aqua;
+            background-color: #eeeeee;
             border: solid 1px;
-            border-color: cornflowerblue;
-            border-radius: 10px;
+            border-color: #cccccc;
+            border-radius: 0;
             padding: 5px 10px;
             display: inline-block;
         }
 
         .client {
-            background-color: lemonchiffon;
+            background-color: #dddddd;
             border: solid 1px;
-            border-color: burlywood;
-            border-radius: 10px;
+            border-color: #cccccc;
+            border-radius: 0;
             padding: 5px 10px;
             display: inline-block;
             text-align: right;
@@ -68,7 +77,7 @@
         }
 
         .message {
-            font-size: medium;
+            font-size: small;
         }
 
         .card-body {
@@ -92,9 +101,7 @@
         </div>
         <div class="card-body" id="chat-container"></div>
         <div class="card-footer">
-            <label class="mb-2">Mensagem</label>
-            <textarea class="form-control" id="message-textarea"></textarea>
-            <button class="btn btn-success mt-2" onclick="sendMessage()">Enviar</button>
+            <textarea class="form-control" id="message-textarea" placeholder="Escreva uma mensagem"></textarea>
         </div>
     </div>
 
@@ -120,6 +127,12 @@
             setTimeout(() => {
                 addMessageToContent('chat', first_message);
             }, timeout);
+            $('#message-textarea').keypress(function(e) {
+                if(e.which == 13) {
+                    sendMessage();
+                    return false;
+                }
+            });
         });
         sendMessage = () => {
             let message = message_textarea.val();
@@ -345,6 +358,7 @@
                     html = '<div class="line-chat">';
                     html += '<div class="chat">';
                     html += '<div class="message">';
+                    html += '<small>Zentrum</small><br>';
                     html += message;
                     html += '</div>';
                     html += '</div>';
@@ -354,6 +368,7 @@
                     html = '<div class="line-client">';
                     html += '<div class="client">';
                     html += '<div class="message">';
+                    html += '<small>Eu</small><br>';
                     html += message;
                     html += '</div>';
                     html += '</div>';
