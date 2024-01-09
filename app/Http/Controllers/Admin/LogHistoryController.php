@@ -15,7 +15,7 @@ class LogHistoryController extends Controller
     {
         abort_if(Gate::denies('log_history_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $logs = Log::all();
+        $logs = Log::orderBy('id', 'desc')->limit(100)->get();
 
         return view('admin.logHistories.index', compact('logs'));
     }

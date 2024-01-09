@@ -116,6 +116,7 @@
         const timeout = 3000;
         const first_message = 'Em que posso ajudar?';
         const waiting_message = 'Peço que aguarde enquanto procuro. Pode demorar um pouco.';
+        const email_waiting_message = 'Peço que aguarde enquanto envio o pedido.';
         const chat_container = $('#chat-container');
         const assistant_id = {{ $assistant->id }};
         const message_textarea = $('#message-textarea');
@@ -191,7 +192,7 @@
                                     } else if (type == 'tool_calls') {
                                         clearInterval(interval);
                                         let function_name = resp.data[0].step_details.tool_calls[0].function.name;
-                                        let data = JSON.parse(resp.data[0].step_details.tool_calls[0].function.arguments);
+                                        let data = resp.data[0].step_details.tool_calls[0].function.arguments;
                                         let tool_call_id = resp.data[0].step_details.tool_calls[0].id;
                                         if(function_name == 'get_products'){
                                             addMessageToContent ('chat', waiting_message);
@@ -199,11 +200,11 @@
                                                 let output = JSON.stringify(resp);
                                                 submitToolOutputsToRun(thread_id, run_id, tool_call_id, output).then((resp) => {
                                                     let run_id = resp.id;
-                                                    let interval = setInterval(() => {
+                                                    let interval_function = setInterval(() => {
                                                         getRunStatus(thread_id, run_id).then((resp) => {
                                                             status = resp.status;
                                                             if(status == 'completed'){
-                                                                clearInterval(interval);
+                                                                clearInterval(interval_function);
                                                                 getMessages(thread_id).then((resp) => {
                                                                     message = resp.data[0].content[0].text.value;
                                                                     addMessageToContent ('chat', message);
@@ -216,15 +217,16 @@
                                             });
                                         }
                                         if(function_name == 'send_email'){
-                                            console.log(data);
+                                            addMessageToContent ('chat', email_waiting_message);
                                             sendEmail(data).then(() => {
                                                 submitToolOutputsToRun(thread_id, run_id, tool_call_id, true).then((resp) => {
                                                     let run_id = resp.id;
-                                                    let interval = setInterval(() => {
+                                                    let interval_function2 = setInterval(() => {
                                                         getRunStatus(thread_id, run_id).then((resp) => {
+                                                            console.log(resp);
                                                             status = resp.status;
                                                             if(status == 'completed'){
-                                                                clearInterval(interval);
+                                                                clearInterval(interval_function2);
                                                                 getMessages(thread_id).then((resp) => {
                                                                     message = resp.data[0].content[0].text.value;
                                                                     addMessageToContent ('chat', message);
@@ -236,6 +238,10 @@
                                                 });
                                             });
                                         }
+                                    } else {
+                                        clearInterval(interval);
+                                        console.log(resp);
+                                        message_textarea.LoadingOverlay('hide');
                                     }
                                 });
                             }, 2000);
