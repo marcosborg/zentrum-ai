@@ -33,7 +33,7 @@
         }
 
         .card {
-            border: none;
+            
         }
 
         .card-footer {
