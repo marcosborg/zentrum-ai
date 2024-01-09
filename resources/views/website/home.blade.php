@@ -32,10 +32,6 @@
             width: 100%;
         }
 
-        .card {
-            
-        }
-
         .card-footer {
             padding: 0 !important;
             background: transparent;
@@ -83,6 +79,7 @@
         .card-body {
             overflow-y: scroll;
             height: 370px;
+            background: #fafafa;
         }
     </style>
 </head>
