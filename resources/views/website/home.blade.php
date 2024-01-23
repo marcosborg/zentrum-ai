@@ -124,6 +124,7 @@
         $(() => {
             setTimeout(() => {
                 checkIfThreadInSession().then((resp) => {
+                    console.log(resp);
                     if(resp){
                         thread_id = resp;
                         checkIfLogInSession().then((resp) => {
