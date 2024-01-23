@@ -128,6 +128,7 @@
                     if(resp){
                         thread_id = resp;
                         checkIfLogInSession().then((resp) => {
+                            console.log(resp);
                             if(resp){
                                 log_id = resp;
                                 getAllMessages(log_id).then((resp) => {
