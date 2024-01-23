@@ -137,6 +137,8 @@
                                         addMessageToContent(element.role, element.message);
                                     });
                                 });
+                            } else {
+                                addMessageToContent('chat', first_message);
                             }
                         });
                     } else {
@@ -175,7 +177,10 @@
                                         clearInterval(interval);
                                         getMessages(thread_id).then((resp) => {
                                             message = resp.data[0].content[0].text.value;
-                                            addMessageToLog('chat', message);
+                                            addMessageToLog('chat', message).then((resp) => {
+                                                log_id = resp.log_id;
+                                                storeLogInSession(log_id);
+                                            });
                                             addMessageToContent ('chat', message);
                                             message_textarea.LoadingOverlay('hide');
                                         });
@@ -200,7 +205,10 @@
                                                 clearInterval(interval);
                                                 getMessages(thread_id).then((resp) => {
                                                     message = resp.data[0].content[0].text.value;
-                                                    addMessageToLog('chat', message);
+                                                    addMessageToLog('chat', message).then((resp) => {
+                                                        log_id = resp.log_id;
+                                                        storeLogInSession(log_id);
+                                                    });
                                                     addMessageToContent ('chat', message);
                                                     message_textarea.LoadingOverlay('hide');
                                                 });
