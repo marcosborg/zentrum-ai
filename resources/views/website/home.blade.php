@@ -130,6 +130,7 @@
                             if(resp){
                                 log_id = resp;
                                 getAllMessages(log_id).then((resp) => {
+                                    console.log(resp);
                                     resp.forEach(element => {
                                         addMessageToContent(element.role, element.message);
                                     });
