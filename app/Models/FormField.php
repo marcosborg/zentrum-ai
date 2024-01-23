@@ -24,6 +24,7 @@ class FormField extends Model
         'label',
         'type',
         'position',
+        'form_id',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -42,5 +43,10 @@ class FormField extends Model
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
+    }
+
+    public function form()
+    {
+        return $this->belongsTo(Form::class, 'form_id');
     }
 }

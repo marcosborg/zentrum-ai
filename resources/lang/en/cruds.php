@@ -237,6 +237,8 @@ return [
             'updated_at_helper' => ' ',
             'deleted_at'        => 'Deleted at',
             'deleted_at_helper' => ' ',
+            'form'              => 'Form',
+            'form_helper'       => ' ',
         ],
     ],
     'formData' => [
@@ -256,6 +258,10 @@ return [
             'deleted_at'        => 'Deleted at',
             'deleted_at_helper' => ' ',
         ],
+    ],
+    'formsAssembly' => [
+        'title'          => 'Form Assembly',
+        'title_singular' => 'Form Assembly',
     ],
 
 ];

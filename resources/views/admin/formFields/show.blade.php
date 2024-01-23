@@ -55,6 +55,14 @@
                             {{ $formField->position }}
                         </td>
                     </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.formField.fields.form') }}
+                        </th>
+                        <td>
+                            {{ $formField->form->name ?? '' }}
+                        </td>
+                    </tr>
                 </tbody>
             </table>
             <div class="form-group">

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\MassDestroyFormFieldRequest;
 use App\Http\Requests\StoreFormFieldRequest;
 use App\Http\Requests\UpdateFormFieldRequest;
+use App\Models\Form;
 use App\Models\FormField;
 use Gate;
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ class FormFieldsController extends Controller
     {
         abort_if(Gate::denies('form_field_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $formFields = FormField::all();
+        $formFields = FormField::with(['form'])->get();
 
         return view('admin.formFields.index', compact('formFields'));
     }
@@ -26,7 +27,9 @@ class FormFieldsController extends Controller
     {
         abort_if(Gate::denies('form_field_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        return view('admin.formFields.create');
+        $forms = Form::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        return view('admin.formFields.create', compact('forms'));
     }
 
     public function store(StoreFormFieldRequest $request)
@@ -40,7 +43,11 @@ class FormFieldsController extends Controller
     {
         abort_if(Gate::denies('form_field_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        return view('admin.formFields.edit', compact('formField'));
+        $forms = Form::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        $formField->load('form');
+
+        return view('admin.formFields.edit', compact('formField', 'forms'));
     }
 
     public function update(UpdateFormFieldRequest $request, FormField $formField)
@@ -53,6 +60,8 @@ class FormFieldsController extends Controller
     public function show(FormField $formField)
     {
         abort_if(Gate::denies('form_field_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $formField->load('form');
 
         return view('admin.formFields.show', compact('formField'));
     }

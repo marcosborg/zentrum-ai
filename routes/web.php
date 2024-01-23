@@ -95,6 +95,13 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     // Form Data
     Route::delete('form-datas/destroy', 'FormDataController@massDestroy')->name('form-datas.massDestroy');
     Route::resource('form-datas', 'FormDataController');
+
+    // Forms Assembly
+    Route::prefix('forms-assemblies')->group(function () {
+        Route::get('/{form_id?}', 'FormsAssemblyController@index')->name('forms-assemblies.index');
+        Route::get('change-project-id/{project_id}', 'FormsAssemblyController@changeProjectId');
+        Route::post('create-form-field', 'FormsAssemblyController@createFormField');
+    });
 });
 
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {

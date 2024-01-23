@@ -188,6 +188,16 @@
                             </a>
                         </li>
                     @endcan
+                    @can('forms_assembly_access')
+                        <li class="c-sidebar-nav-item">
+                            <a href="{{ route("admin.forms-assemblies.index") }}" class="c-sidebar-nav-link {{ request()->is("admin/forms-assemblies") || request()->is("admin/forms-assemblies/*") ? "c-active" : "" }}">
+                                <i class="fa-fw fas fa-bezier-curve c-sidebar-nav-icon">
+
+                                </i>
+                                {{ trans('cruds.formsAssembly.title') }}
+                            </a>
+                        </li>
+                    @endcan
                 </ul>
             </li>
         @endcan

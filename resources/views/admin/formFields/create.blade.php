@@ -55,6 +55,20 @@
                 <span class="help-block">{{ trans('cruds.formField.fields.position_helper') }}</span>
             </div>
             <div class="form-group">
+                <label class="required" for="form_id">{{ trans('cruds.formField.fields.form') }}</label>
+                <select class="form-control select2 {{ $errors->has('form') ? 'is-invalid' : '' }}" name="form_id" id="form_id" required>
+                    @foreach($forms as $id => $entry)
+                        <option value="{{ $id }}" {{ old('form_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
+                    @endforeach
+                </select>
+                @if($errors->has('form'))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('form') }}
+                    </div>
+                @endif
+                <span class="help-block">{{ trans('cruds.formField.fields.form_helper') }}</span>
+            </div>
+            <div class="form-group">
                 <button class="btn btn-danger" type="submit">
                     {{ trans('global.save') }}
                 </button>

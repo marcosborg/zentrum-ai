@@ -38,6 +38,9 @@
                             {{ trans('cruds.formField.fields.position') }}
                         </th>
                         <th>
+                            {{ trans('cruds.formField.fields.form') }}
+                        </th>
+                        <th>
                             &nbsp;
                         </th>
                     </tr>
@@ -62,6 +65,9 @@
                             </td>
                             <td>
                                 {{ $formField->position ?? '' }}
+                            </td>
+                            <td>
+                                {{ $formField->form->name ?? '' }}
                             </td>
                             <td>
                                 @can('form_field_show')
