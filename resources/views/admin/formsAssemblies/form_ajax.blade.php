@@ -1,0 +1,84 @@
+@if ($form)
+<div class="card mt-4">
+    <div class="card-header">
+        <button class="btn btn-success btn-small" data-toggle="modal" data-target="#add_field">Add
+            field</button>
+    </div>
+    <div class="card-body" style="background: #eeeeee;">
+        @if ($form && $form->logo)
+        <img src="{{ $form->logo->getUrl() }}" class="img-thumbnail mb-4" width="100">
+        @endif
+        @if (!$form->form_fields)
+        <div class="alert alert-primary" role="alert">
+            Ainda não existem campos.
+        </div>
+        @else
+        @if ($form)
+        <div id="sortable" class="row">
+            @foreach ($form->form_fields as $form_field)
+            <div class="col-md-4">
+                <div class="card" data-position={{ $form_field->position }} data-id="{{ $form_field->id }}">
+                    <div class="card-body">
+                        @switch($form_field->type)
+                        @case('text')
+                        <div class="form-group">
+                            <label for="{{ $form_field->name }}">{{ $form_field->label }}</label>
+                            <input type="text" name="{{ $form_field->name }}" id="{{ $form_field->name }}"
+                                class="form-control">
+                        </div>
+                        @break
+                        @case('date')
+                        <div class="form-group">
+                            <label for="{{ $form_field->name }}">{{ $form_field->label }}</label>
+                            <input type="date" name="{{ $form_field->name }}" id="{{ $form_field->name }}"
+                                class="form-control">
+                        </div>
+                        @break
+                        @case('email')
+                        <div class="form-group">
+                            <label for="{{ $form_field->name }}">{{ $form_field->label }}</label>
+                            <input type="email" name="{{ $form_field->name }}" id="{{ $form_field->name }}"
+                                class="form-control">
+                        </div>
+                        @break
+                        @case('textarea')
+                        <div class="form-group">
+                            <label for="{{ $form_field->name }}">{{ $form_field->label }}</label>
+                            <textarea name="{{ $form_field->name }}" id="{{ $form_field->name }}"
+                                class="form-control"></textarea>
+                        </div>
+                        @break
+                        @case('radio')
+                        <label>{{ $form_field->label }}</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="{{ $form_field->name }}" value="yes"
+                                checked id="check-{{ $form_field->id }}-1">
+                            <label class="form-check-label" for="check-{{ $form_field->id }}-1">
+                                Sim
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="{{ $form_field->name }}" value="no"
+                                id="check-{{ $form_field->id }}-2">
+                            <label class="form-check-label" for="check-{{ $form_field->id }}-2">
+                                Não
+                            </label>
+                        </div>
+                        @break
+                        @default
+                        <div class="form-group">
+                            <label for="{{ $form_field->name }}">{{ $form_field->label }}</label>
+                            <input type="text" name="{{ $form_field->name }}" id="{{ $form_field->name }}"
+                                class="form-control">
+                        </div>
+                        @endswitch
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+        @endif
+        @endif
+    </div>
+</div>
+@endif

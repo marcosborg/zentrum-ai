@@ -33,14 +33,13 @@ class FormsAssemblyController extends Controller
             $form_id = $forms[0]->id;
         }
 
-        $form = Form::where('id', $form_id)->with('form_fields')->first();
+
 
         return view('admin.formsAssemblies.index', compact([
             'projects',
             'project_id',
             'forms',
-            'form_id',
-            'form'
+            'form_id'
         ]));
     }
 
@@ -93,6 +92,25 @@ class FormsAssemblyController extends Controller
         $form_field->form_id = $request->form_id;
         $form_field->position = $position;
         $form_field->save();
+    }
+
+    public function formAjax($form_id)
+    {
+        $form = Form::where('id', $form_id)->with('form_fields')->first();
+
+        return view('admin.formsAssemblies.form_ajax', compact('form'));
+    }
+
+    public function updatePositions(Request $request)
+    {
+        $data = json_decode($request->data);
+
+        foreach ($data as $value) {
+            $form_field = FormField::find($value->id);
+            $form_field->position = $value->position;
+            $form_field->save();
+        }
+
     }
 
 }

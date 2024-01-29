@@ -64,6 +64,6 @@ class Form extends Model implements HasMedia
 
     public function form_fields()
     {
-        return $this->hasMany(FormField::class);
+        return $this->hasMany(FormField::class)->orderBy('position');
     }
 }

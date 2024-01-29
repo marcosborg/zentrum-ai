@@ -101,6 +101,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
         Route::get('/{form_id?}', 'FormsAssemblyController@index')->name('forms-assemblies.index');
         Route::get('change-project-id/{project_id}', 'FormsAssemblyController@changeProjectId');
         Route::post('create-form-field', 'FormsAssemblyController@createFormField');
+        Route::get('form-ajax/{form_id}', 'FormsAssemblyController@formAjax');
+        Route::post('update-positions', 'FormsAssemblyController@updatePositions');
     });
 });
 

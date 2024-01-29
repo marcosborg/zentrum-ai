@@ -16,7 +16,7 @@
             @endforeach
         </ul>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="card mt-4">
                     <div class="card-body">
                         @if ($forms->count() == 0)
@@ -36,76 +36,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                @if ($form)
-                <div class="card mt-4">
-                    <div class="card-header">
-                        <button class="btn btn-success btn-small" data-toggle="modal" data-target="#add_field">Add
-                            field</button>
-                    </div>
-                    <div class="card-body">
-                        @if ($form && $form->logo)
-                        <img src="{{ $form->logo->getUrl() }}" class="img-thumbnail mb-4" width="100">
-                        @endif
-                        @if (!$form->form_fields)
-                        <div class="alert alert-primary" role="alert">
-                            Ainda não existem campos.
-                        </div>
-                        @else
-                        @if ($form)
-                        @foreach ($form->form_fields as $form_field)
-                        @switch($form_field->type)
-                        @case('text')
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <label for="{{ $form_field->name }}">{{ $form_field->label }}</label>
-                                    <input type="text" name="{{ $form_field->name }}" id="{{ $form_field->name }}"
-                                        class="form-control">
-                                </div>
-                            </div>
-                        </div>
-                        @break
-                        @case('date')
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <label for="{{ $form_field->name }}">{{ $form_field->label }}</label>
-                                    <input type="date" name="{{ $form_field->name }}" id="{{ $form_field->name }}"
-                                        class="form-control">
-                                </div>
-                            </div>
-                        </div>
-                        @break
-                        @case('email')
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <label for="{{ $form_field->name }}">{{ $form_field->label }}</label>
-                                    <input type="email" name="{{ $form_field->name }}" id="{{ $form_field->name }}"
-                                        class="form-control">
-                                </div>
-                            </div>
-                        </div>
-                        @break
-                        @default
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <label for="{{ $form_field->name }}">{{ $form_field->label }}</label>
-                                    <input type="text" name="{{ $form_field->name }}" id="{{ $form_field->name }}"
-                                        class="form-control">
-                                </div>
-                            </div>
-                        </div>
-                        @endswitch
-                        @endforeach
-                        @endif
-                        @endif
-                    </div>
-                </div>
-                @endif
-            </div>
+            <div class="col-md-8" id="form_ajax"></div>
         </div>
     </div>
 </div>
@@ -159,17 +90,62 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js">
 </script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 <script>
-    $('#add_field form').ajaxForm({
-        beforeSubmit: () => {
-            $.LoadingOverlay('show');
-        },
-        success: () => {
-            location.reload();
-        },
-        error: () => {
+    $(() => {
+        var form_id = {{ $form_id }};
+        getFormAjax(form_id).then(() => {
+            $('#sortable').sortable({
+                update: (event, ui) => {
+                    var cardData = [];
+                    $("#sortable .card").each(function(index) {
+                        var position = index + 1;
+                        var id = $(this).data("id");
+                        cardData.push({ id: id, position: position });
+                    });
+                    $.post({
+                        url: '/admin/forms-assemblies/update-positions',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: {
+                            data: JSON.stringify(cardData)
+                        },
+                        success: () => {
+                            getFormAjax(form_id);
+                        },
+                        error: (error) => {
+                            console.log(error);
+                        }
+                    });
+                }
+            });
+        });
+        $('#add_field form').ajaxForm({
+            beforeSubmit: () => {
+                $.LoadingOverlay('show');
+            },
+            success: () => {
+                getFormAjax(form_id);
+                $.LoadingOverlay('hide');
+                $('input').val('');
+                $('#add_field').modal('hide');
+                $('.modal-backdrop').remove();
+            },
+            error: () => {
+                console.log(error);
+            }
+        });
+    });
+    
+    getFormAjax = async (form_id) => {
+        try {
+            return $.get('/admin/forms-assemblies/form-ajax/' + form_id).then((resp) => {
+                $('#form_ajax').html(resp);
+            });   
+        } catch (error) {
             console.log(error);
         }
-    });
+    }
 </script>
 @endsection
