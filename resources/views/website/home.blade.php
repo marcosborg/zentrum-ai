@@ -124,15 +124,12 @@
         $(() => {
             setTimeout(() => {
                 checkIfThreadInSession().then((resp) => {
-                    console.log(resp);
                     if(resp){
                         thread_id = resp;
                         checkIfLogInSession().then((resp) => {
-                            console.log(resp);
                             if(resp){
                                 log_id = resp;
                                 getAllMessages(log_id).then((resp) => {
-                                    console.log(resp);
                                     resp.forEach(element => {
                                         addMessageToContent(element.role, element.message);
                                     });
@@ -231,7 +228,6 @@
                                                         let run_id = resp.id;
                                                         let interval_function = setInterval(() => {
                                                             getRunStatus(thread_id, run_id).then((resp) => {
-                                                                console.log(resp);
                                                                 status = resp.status;
                                                                 if(status == 'completed'){
                                                                     clearInterval(interval_function);
@@ -256,7 +252,6 @@
                                                         let run_id = resp.id;
                                                         let interval_function2 = setInterval(() => {
                                                             getRunStatus(thread_id, run_id).then((resp) => {
-                                                                console.log(resp);
                                                                 status = resp.status;
                                                                 if(status == 'completed'){
                                                                     clearInterval(interval_function2);
@@ -274,7 +269,6 @@
                                         }
                                     } else {
                                         clearInterval(interval);
-                                        console.log(resp);
                                         message_textarea.LoadingOverlay('hide');
                                     }
                                 });
