@@ -239,6 +239,8 @@ return [
             'deleted_at_helper' => ' ',
             'form'              => 'Form',
             'form_helper'       => ' ',
+            'required'          => 'Required',
+            'required_helper'   => ' ',
         ],
     ],
     'formData' => [

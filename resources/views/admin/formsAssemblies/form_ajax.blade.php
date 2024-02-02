@@ -3,7 +3,8 @@
     <div class="card-header">
         <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#add_field">Add
             field</button>
-        <button class="btn btn-danger btn-sm pull-right" onclick="deleteForm({{ $form->id }})"><i class="fa-fw fas fa-trash"></i></button>
+        <button class="btn btn-danger btn-sm pull-right" onclick="deleteForm({{ $form->id }})"><i
+                class="fa-fw fas fa-trash"></i></button>
     </div>
     <div class="card-body" style="background: #eeeeee;">
         @if ($form && $form->logo)
@@ -20,50 +21,75 @@
             <div class="col-md-4">
                 <div class="card" data-position={{ $form_field->position }} data-id="{{ $form_field->id }}">
                     <div class="card-body" style="padding: 10px">
-                        <div class="delete" onclick="deleteField({{ $form_field->id }})"><i class="fa-fw fas fa-trash"></i></div>
+                        <div class="delete" onclick="deleteField({{ $form_field->id }})"><i
+                                class="fa-fw fas fa-trash"></i></div>
                         @switch($form_field->type)
                         @case('text')
                         <div class="form-group">
                             <label for="{{ $form_field->name }}">{{ $form_field->label }}</label>
                             <input type="text" name="{{ $form_field->name }}" id="{{ $form_field->name }}"
-                                class="form-control">
+                                class="form-control form-field" data-label="{{ $form_field->label }}"
+                                data-type="{{ $form_field->type }}">
                         </div>
                         @break
                         @case('date')
                         <div class="form-group">
                             <label for="{{ $form_field->name }}">{{ $form_field->label }}</label>
                             <input type="date" name="{{ $form_field->name }}" id="{{ $form_field->name }}"
-                                class="form-control">
+                                class="form-control form-field" data-label="{{ $form_field->label }}"
+                                data-type="{{ $form_field->type }}">
                         </div>
                         @break
                         @case('email')
                         <div class="form-group">
                             <label for="{{ $form_field->name }}">{{ $form_field->label }}</label>
                             <input type="email" name="{{ $form_field->name }}" id="{{ $form_field->name }}"
-                                class="form-control">
+                                class="form-control form-field" data-label="{{ $form_field->label }}"
+                                data-type="{{ $form_field->type }}">
                         </div>
                         @break
                         @case('textarea')
                         <div class="form-group">
                             <label for="{{ $form_field->name }}">{{ $form_field->label }}</label>
                             <textarea name="{{ $form_field->name }}" id="{{ $form_field->name }}"
-                                class="form-control"></textarea>
+                                class="form-control form-field" data-label="{{ $form_field->label }}"
+                                data-type="{{ $form_field->type }}"></textarea>
                         </div>
                         @break
                         @case('radio')
                         <label>{{ $form_field->label }}</label>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="{{ $form_field->name }}" value="yes"
-                                checked id="check-{{ $form_field->id }}-1">
+                            <input class="form-check-input form-field" type="radio" name="{{ $form_field->name }}"
+                                value="yes" checked id="check-{{ $form_field->id }}-1"
+                                data-label="{{ $form_field->label }}" data-type="{{ $form_field->type }}" value="yes">
                             <label class="form-check-label" for="check-{{ $form_field->id }}-1">
                                 Sim
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="{{ $form_field->name }}" value="no"
-                                id="check-{{ $form_field->id }}-2">
+                            <input class="form-check-input form-field" type="radio" name="{{ $form_field->name }}"
+                                value="no" id="check-{{ $form_field->id }}-2" data-label="{{ $form_field->label }}"
+                                data-type="{{ $form_field->type }}" value="no">
                             <label class="form-check-label" for="check-{{ $form_field->id }}-2">
                                 Não
+                            </label>
+                        </div>
+                        @break
+                        @case('file')
+                        <div class="form-group">
+                            <label for="{{ $form_field->name }}">{{ $form_field->label }}</label>
+                            <input type="file" name="{{ $form_field->name }}" id="{{ $form_field->name }}"
+                                class="form-control form-field" data-label="{{ $form_field->label }}"
+                                data-type="{{ $form_field->type }}">
+                        </div>
+                        @break
+                        @case('checkbox')
+                        <div class="form-check">
+                            <input class="form-check-input form-field" type="checkbox" name="{{ $form_field->name }}"
+                                id="{{ $form_field->name }}" data-label="{{ $form_field->label }}"
+                                data-type="{{ $form_field->type }}">
+                            <label class="form-check-label" for="{{ $form_field->name }}">
+                                {{ $form_field->label }}
                             </label>
                         </div>
                         @break
@@ -71,7 +97,8 @@
                         <div class="form-group">
                             <label for="{{ $form_field->name }}">{{ $form_field->label }}</label>
                             <input type="text" name="{{ $form_field->name }}" id="{{ $form_field->name }}"
-                                class="form-control">
+                                class="form-control form-field" data-label="{{ $form_field->label }}"
+                                data-type="{{ $form_field->type }}">
                         </div>
                         @endswitch
                     </div>
@@ -83,7 +110,7 @@
         @endif
     </div>
     <div class="card-footer">
-        <button type="submit" class="btn btn-success">Send</button>
+        <button type="button" class="btn btn-success" onclick="submitForm()">Send</button>
     </div>
 </div>
 @endif

@@ -25,6 +25,7 @@ class FormField extends Model
         'type',
         'position',
         'form_id',
+        'required',
         'created_at',
         'updated_at',
         'deleted_at',

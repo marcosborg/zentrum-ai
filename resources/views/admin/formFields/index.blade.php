@@ -41,6 +41,9 @@
                             {{ trans('cruds.formField.fields.form') }}
                         </th>
                         <th>
+                            {{ trans('cruds.formField.fields.required') }}
+                        </th>
+                        <th>
                             &nbsp;
                         </th>
                     </tr>
@@ -68,6 +71,10 @@
                             </td>
                             <td>
                                 {{ $formField->form->name ?? '' }}
+                            </td>
+                            <td>
+                                <span style="display:none">{{ $formField->required ?? '' }}</span>
+                                <input type="checkbox" disabled="disabled" {{ $formField->required ? 'checked' : '' }}>
                             </td>
                             <td>
                                 @can('form_field_show')

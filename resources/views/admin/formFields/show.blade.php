@@ -63,6 +63,14 @@
                             {{ $formField->form->name ?? '' }}
                         </td>
                     </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.formField.fields.required') }}
+                        </th>
+                        <td>
+                            <input type="checkbox" disabled="disabled" {{ $formField->required ? 'checked' : '' }}>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
             <div class="form-group">

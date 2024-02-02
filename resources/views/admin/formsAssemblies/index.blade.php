@@ -187,11 +187,7 @@
                 $.LoadingOverlay('show');
             },
             success: () => {
-                getFormAjax(form_id);
-                $.LoadingOverlay('hide');
-                $('input').val('');
-                $('#add_field').modal('hide');
-                $('.modal-backdrop').remove();
+                location.reload();
             },
             error: () => {
                 console.log(error);
@@ -255,6 +251,53 @@
                 });     
             }
         });
+    }
+
+    submitForm = () => {
+        var fields = $('.form-field');
+        let data = [];
+        let validation = '';
+        fields.each((i, v) => {
+            let label = $(v).data('label');
+            let value = $(v).val();
+            let name = $(v).attr('name');
+            let type = $(v).data('type');
+            let data_field = {
+                label: label,
+                value: value,
+                name: name,
+                type: type,
+            };
+            if(type !== 'file'){
+                if(value == ''){
+                    validation += '<p>The field "' + label + '" is required.</p>';
+                }
+            }
+            if(type == 'radio'){
+                if($(v).is(':checked')) {
+                    data.push(data_field);
+                }
+            } else if(type == 'checkbox') {
+                if($(v).is(':checked')) {
+                    data_field.value = true
+                    data.push(data_field);
+                } else {
+                    data_field.value = false
+                    data.push(data_field);
+                }
+            } else {
+                data.push(data_field);
+            }
+        });
+        console.log(data);
+        if(validation !== ''){
+            Swal.fire({
+                title: "Validation!",
+                html: validation,
+                icon: "error"
+            });
+        }
+        console.log(validation);
     }
 </script>
 <script>
