@@ -9,9 +9,14 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Models\Project;
 use App\Models\Form;
 use App\Models\FormField;
+use App\Http\Controllers\Traits\MediaUploadingTrait;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class FormsAssemblyController extends Controller
 {
+
+    use MediaUploadingTrait;
+
     public function index($form_id = null)
     {
 
@@ -111,6 +116,38 @@ class FormsAssemblyController extends Controller
             $form_field->save();
         }
 
+    }
+
+    public function newForm(Request $request)
+    {
+        $form = new Form;
+        $form->name = $request->name;
+        $form->project_id = $request->project_id;
+        $form->save();
+
+        return $form;
+    }
+
+    public function storeCKEditorImages(Request $request)
+    {
+        abort_if(Gate::denies('form_create') && Gate::denies('form_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $model         = new Form();
+        $model->id     = $request->input('crud_id', 0);
+        $model->exists = true;
+        $media         = $model->addMediaFromRequest('upload')->toMediaCollection('ck-media');
+
+        return response()->json(['id' => $media->id, 'url' => $media->getUrl()], Response::HTTP_CREATED);
+    }
+
+    public function deleteField($form_field_id)
+    {
+        return FormField::find($form_field_id)->delete();
+    }
+
+    public function deleteForm($form_id)
+    {
+        return Form::find($form_id)->delete();
     }
 
 }

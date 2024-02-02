@@ -103,6 +103,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
         Route::post('create-form-field', 'FormsAssemblyController@createFormField');
         Route::get('form-ajax/{form_id}', 'FormsAssemblyController@formAjax');
         Route::post('update-positions', 'FormsAssemblyController@updatePositions');
+        Route::post('new-form', 'FormsAssemblyController@newForm');
+        Route::post('new-form/media', 'FormsAssemblyController@storeMedia');
+        Route::post('new-form/ckmedia', 'FormsAssemblyController@storeCKEditorImages')->name('forms-assemblies.new-form.storeCKEditorImages');
+        Route::get('delete-field/{form_field_id}', 'FormsAssemblyController@deleteField');
+        Route::get('delete-form/{form_id}', 'FormsAssemblyController@deleteForm');
     });
 });
 

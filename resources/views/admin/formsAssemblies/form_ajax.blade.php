@@ -1,14 +1,15 @@
 @if ($form)
 <div class="card mt-4">
     <div class="card-header">
-        <button class="btn btn-success btn-small" data-toggle="modal" data-target="#add_field">Add
+        <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#add_field">Add
             field</button>
+        <button class="btn btn-danger btn-sm pull-right" onclick="deleteForm({{ $form->id }})"><i class="fa-fw fas fa-trash"></i></button>
     </div>
     <div class="card-body" style="background: #eeeeee;">
         @if ($form && $form->logo)
         <img src="{{ $form->logo->getUrl() }}" class="img-thumbnail mb-4" width="100">
         @endif
-        @if (!$form->form_fields)
+        @if ($form->form_fields->count() == 0)
         <div class="alert alert-primary" role="alert">
             Ainda não existem campos.
         </div>
@@ -18,7 +19,8 @@
             @foreach ($form->form_fields as $form_field)
             <div class="col-md-4">
                 <div class="card" data-position={{ $form_field->position }} data-id="{{ $form_field->id }}">
-                    <div class="card-body">
+                    <div class="card-body" style="padding: 10px">
+                        <div class="delete" onclick="deleteField({{ $form_field->id }})"><i class="fa-fw fas fa-trash"></i></div>
                         @switch($form_field->type)
                         @case('text')
                         <div class="form-group">
@@ -79,6 +81,9 @@
         </div>
         @endif
         @endif
+    </div>
+    <div class="card-footer">
+        <button type="submit" class="btn btn-success">Send</button>
     </div>
 </div>
 @endif
