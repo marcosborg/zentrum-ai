@@ -262,16 +262,16 @@
             let value = $(v).val();
             let name = $(v).attr('name');
             let type = $(v).data('type');
+            let required = $(v).data('required');
             let data_field = {
                 label: label,
                 value: value,
                 name: name,
                 type: type,
+                required: required
             };
-            if(type !== 'file'){
-                if(value == ''){
-                    validation += '<p>The field "' + label + '" is required.</p>';
-                }
+            if(required == true && value == ''){
+                validation += '<p>The field "' + label + '" is required.</p>';
             }
             if(type == 'radio'){
                 if($(v).is(':checked')) {
@@ -297,7 +297,6 @@
                 icon: "error"
             });
         }
-        console.log(validation);
     }
 </script>
 <script>

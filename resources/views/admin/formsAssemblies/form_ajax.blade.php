@@ -26,34 +26,42 @@
                         @switch($form_field->type)
                         @case('text')
                         <div class="form-group">
-                            <label for="{{ $form_field->name }}">{{ $form_field->label }}</label>
+                            <label for="{{ $form_field->name }}">{{ $form_field->label }}{{ $form_field->required ? ' *'
+                                : '' }}</label>
                             <input type="text" name="{{ $form_field->name }}" id="{{ $form_field->name }}"
                                 class="form-control form-field" data-label="{{ $form_field->label }}"
-                                data-type="{{ $form_field->type }}">
+                                data-type="{{ $form_field->type }}"
+                                data-required="{{ $form_field->required ? true : false }}">
                         </div>
                         @break
                         @case('date')
                         <div class="form-group">
-                            <label for="{{ $form_field->name }}">{{ $form_field->label }}</label>
+                            <label for="{{ $form_field->name }}">{{ $form_field->label }}{{ $form_field->required ? ' *'
+                                : '' }}</label>
                             <input type="date" name="{{ $form_field->name }}" id="{{ $form_field->name }}"
                                 class="form-control form-field" data-label="{{ $form_field->label }}"
-                                data-type="{{ $form_field->type }}">
+                                data-type="{{ $form_field->type }}"
+                                data-required="{{ $form_field->required ? true : false }}">
                         </div>
                         @break
                         @case('email')
                         <div class="form-group">
-                            <label for="{{ $form_field->name }}">{{ $form_field->label }}</label>
+                            <label for="{{ $form_field->name }}">{{ $form_field->label }}{{ $form_field->required ? ' *'
+                                : '' }}</label>
                             <input type="email" name="{{ $form_field->name }}" id="{{ $form_field->name }}"
                                 class="form-control form-field" data-label="{{ $form_field->label }}"
-                                data-type="{{ $form_field->type }}">
+                                data-type="{{ $form_field->type }}"
+                                data-required="{{ $form_field->required ? true : false }}">
                         </div>
                         @break
                         @case('textarea')
                         <div class="form-group">
-                            <label for="{{ $form_field->name }}">{{ $form_field->label }}</label>
+                            <label for="{{ $form_field->name }}">{{ $form_field->label }}{{ $form_field->required ? ' *'
+                                : '' }}</label>
                             <textarea name="{{ $form_field->name }}" id="{{ $form_field->name }}"
                                 class="form-control form-field" data-label="{{ $form_field->label }}"
-                                data-type="{{ $form_field->type }}"></textarea>
+                                data-type="{{ $form_field->type }}"
+                                data-required="{{ $form_field->required ? true : false }}"></textarea>
                         </div>
                         @break
                         @case('radio')
@@ -77,28 +85,33 @@
                         @break
                         @case('file')
                         <div class="form-group">
-                            <label for="{{ $form_field->name }}">{{ $form_field->label }}</label>
+                            <label for="{{ $form_field->name }}">{{ $form_field->label }}{{ $form_field->required ? ' *'
+                                : '' }}</label>
                             <input type="file" name="{{ $form_field->name }}" id="{{ $form_field->name }}"
                                 class="form-control form-field" data-label="{{ $form_field->label }}"
-                                data-type="{{ $form_field->type }}">
+                                data-type="{{ $form_field->type }}"
+                                data-required="{{ $form_field->required ? true : false }}">
                         </div>
                         @break
                         @case('checkbox')
                         <div class="form-check">
                             <input class="form-check-input form-field" type="checkbox" name="{{ $form_field->name }}"
                                 id="{{ $form_field->name }}" data-label="{{ $form_field->label }}"
-                                data-type="{{ $form_field->type }}">
+                                data-type="{{ $form_field->type }}"
+                                data-required="{{ $form_field->required ? true : false }}">
                             <label class="form-check-label" for="{{ $form_field->name }}">
-                                {{ $form_field->label }}
+                                {{ $form_field->label }}{{ $form_field->required ? ' *' : '' }}
                             </label>
                         </div>
                         @break
                         @default
                         <div class="form-group">
-                            <label for="{{ $form_field->name }}">{{ $form_field->label }}</label>
+                            <label for="{{ $form_field->name }}">{{ $form_field->label }}{{ $form_field->required ? ' *'
+                                : '' }}</label>
                             <input type="text" name="{{ $form_field->name }}" id="{{ $form_field->name }}"
                                 class="form-control form-field" data-label="{{ $form_field->label }}"
-                                data-type="{{ $form_field->type }}">
+                                data-type="{{ $form_field->type }}"
+                                data-required="{{ $form_field->required ? true : false }}">
                         </div>
                         @endswitch
                     </div>
@@ -111,6 +124,7 @@
     </div>
     <div class="card-footer">
         <button type="button" class="btn btn-success" onclick="submitForm()">Send</button>
+        <div class="pull-right">* <small>Required</small></div>
     </div>
 </div>
 @endif
