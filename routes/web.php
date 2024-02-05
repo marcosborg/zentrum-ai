@@ -108,7 +108,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
         Route::post('new-form/ckmedia', 'FormsAssemblyController@storeCKEditorImages')->name('forms-assemblies.new-form.storeCKEditorImages');
         Route::get('delete-field/{form_field_id}', 'FormsAssemblyController@deleteField');
         Route::get('delete-form/{form_id}', 'FormsAssemblyController@deleteForm');
-        ROute::post('form-send', 'FormsAssemblyController@formSend');
+        Route::post('form-send', 'FormsAssemblyController@formSend');
     });
 });
 
@@ -143,4 +143,8 @@ Route::prefix('chat')->group(function () {
 Route::prefix('api')->group(function () {
     Route::get('search/{assistant_id}/{search}', 'ChatController@apiSearch');
     Route::post('send-email', 'ChatController@sendEmail');
+});
+
+Route::prefix('form')->group(function () {
+    Route::get('{form_id}', 'FormsController@index');
 });

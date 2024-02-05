@@ -121,6 +121,10 @@
         </div>
         @endif
         @endif
+        <div class="alert alert-info">
+            <strong>Form url</strong><br>
+            <a target="_new" href="{{ url('/') . '/form/' . $form->id }}">{{ url('/') . '/form/' . $form->id }}</a>
+        </div>
     </div>
     <div class="card-footer">
         <button type="button" class="btn btn-success" onclick="submitForm({{ $form->id }})">Send</button>
