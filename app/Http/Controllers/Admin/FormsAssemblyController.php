@@ -11,6 +11,7 @@ use App\Models\Form;
 use App\Models\FormField;
 use App\Http\Controllers\Traits\MediaUploadingTrait;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use App\Models\FormData;
 
 class FormsAssemblyController extends Controller
 {
@@ -148,6 +149,14 @@ class FormsAssemblyController extends Controller
     public function deleteForm($form_id)
     {
         return Form::find($form_id)->delete();
+    }
+
+    public function formSend(Request $request)
+    {
+        $form_data = new FormData;
+        $form_data->form_id = $request->form_id;
+        $form_data->data = json_encode($request->data);
+        $form_data->save();
     }
 
 }

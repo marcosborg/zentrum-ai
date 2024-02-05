@@ -123,7 +123,7 @@
         @endif
     </div>
     <div class="card-footer">
-        <button type="button" class="btn btn-success" onclick="submitForm()">Send</button>
+        <button type="button" class="btn btn-success" onclick="submitForm({{ $form->id }})">Send</button>
         <div class="pull-right">* <small>Required</small></div>
     </div>
 </div>

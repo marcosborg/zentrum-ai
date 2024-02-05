@@ -253,7 +253,7 @@
         });
     }
 
-    submitForm = () => {
+    submitForm = (form_id) => {
         var fields = $('.form-field');
         let data = [];
         let validation = '';
@@ -284,20 +284,46 @@
                 } else {
                     data_field.value = false
                     data.push(data_field);
+                    if(data_field.required == true){
+                        validation += '<p>The field "' + label + '" is required.</p>';
+                    }
                 }
             } else {
                 data.push(data_field);
             }
         });
-        console.log(data);
         if(validation !== ''){
             Swal.fire({
                 title: "Validation!",
                 html: validation,
                 icon: "error"
             });
+        } else {
+            $.post({
+                url: '/admin/forms-assemblies/form-send',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    form_id: form_id,
+                    data: data
+                },
+                success: () => {
+                    Swal.fire({
+                        title: "Success!",
+                        text: "The form was sended!",
+                        icon: "success"
+                    }).then(() => {
+                        location.reload();
+                    });
+                },
+                error: (error) => {
+                    console.log(error);
+                }
+            })
         }
     }
+
 </script>
 <script>
     Dropzone.options.logoDropzone = {

@@ -108,6 +108,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
         Route::post('new-form/ckmedia', 'FormsAssemblyController@storeCKEditorImages')->name('forms-assemblies.new-form.storeCKEditorImages');
         Route::get('delete-field/{form_field_id}', 'FormsAssemblyController@deleteField');
         Route::get('delete-form/{form_id}', 'FormsAssemblyController@deleteForm');
+        ROute::post('form-send', 'FormsAssemblyController@formSend');
     });
 });
 
