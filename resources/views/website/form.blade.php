@@ -4,7 +4,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Zentrum Group | Forms</title>
+    <title>Zentrum Group | {{ $form->name }}</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 </head>
@@ -12,9 +13,11 @@
 <body>
     <div class="container">
         <div class="mt-4">
+            @if ($form->logo)
             <div class="logo text-center">
                 <img src="{{ $form->logo->getUrl() }}" class="img-thumbnail" style="max-width: 200px;">
             </div>
+            @endif
             <div class="card mt-4 mb-5">
                 <div class="card-header text-center">
                     <h3>{{ $form->name }}</h3>
@@ -201,8 +204,8 @@
                     },
                     success: () => {
                         Swal.fire({
-                            title: "Success!",
-                            text: "The form was sended!",
+                            title: "Sucesso!",
+                            text: "Formulário enviado!",
                             icon: "success"
                         }).then(() => {
                             location.reload();
