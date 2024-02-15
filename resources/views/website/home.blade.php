@@ -115,7 +115,7 @@
         const waiting_message = 'Peço que aguarde enquanto procuro. Pode demorar um pouco.';
         const email_waiting_message = 'Peço que aguarde enquanto envio o pedido.';
         const chat_container = $('#chat-container');
-        const assistant_id = {{ $assistant->id }};
+        const assistant_id = {{ $assistant-> id }};
         const message_textarea = $('#message-textarea');
         const project = '{{ $assistant->project->name }}';
         var thread_id = null;
@@ -124,10 +124,10 @@
         $(() => {
             setTimeout(() => {
                 checkIfThreadInSession().then((resp) => {
-                    if(resp){
+                    if (resp) {
                         thread_id = resp;
                         checkIfLogInSession().then((resp) => {
-                            if(resp){
+                            if (resp) {
                                 log_id = resp;
                                 getAllMessages(log_id).then((resp) => {
                                     resp.forEach(element => {
@@ -143,8 +143,8 @@
                     }
                 });
             }, timeout);
-            $('#message-textarea').keypress(function(e) {
-                if(e.which == 13) {
+            $('#message-textarea').keypress(function (e) {
+                if (e.which == 13) {
                     sendMessage();
                     return false;
                 }
@@ -152,7 +152,7 @@
         });
         sendMessage = () => {
             let message = message_textarea.val();
-            if(message.length > 0) {
+            if (message.length > 0) {
                 addMessageToLog('user', message).then((resp) => {
                     log_id = resp.log_id;
                     storeLogInSession(log_id);
@@ -160,45 +160,45 @@
                 addMessageToContent('user', message);
                 message_textarea.val('');
                 message_textarea.LoadingOverlay('show');
-                if(!thread_id){
-                createThreadAndRun(message).then((resp) => {
-                    thread_id = resp.thread_id;
-                    run_id = resp.id;
-                    storeThreadInSession(thread_id).then((resp) => {
-                        let interval = setInterval(() => {
-                            listRunSteps(thread_id, run_id).then((resp) => {
-                                let has_more = resp.has_more;
-                                getRunStatus(thread_id, run_id).then((resp) => {
-                                    let status = resp.status;
-                                    if(status == 'completed' && has_more == false){
-                                        clearInterval(interval);
-                                        getMessages(thread_id).then((resp) => {
-                                            message = resp.data[0].content[0].text.value;
-                                            addMessageToLog('chat', message).then((resp) => {
-                                                log_id = resp.log_id;
-                                                storeLogInSession(log_id);
+                if (!thread_id) {
+                    createThreadAndRun(message).then((resp) => {
+                        thread_id = resp.thread_id;
+                        run_id = resp.id;
+                        storeThreadInSession(thread_id).then((resp) => {
+                            let interval = setInterval(() => {
+                                listRunSteps(thread_id, run_id).then((resp) => {
+                                    let has_more = resp.has_more;
+                                    getRunStatus(thread_id, run_id).then((resp) => {
+                                        let status = resp.status;
+                                        if (status == 'completed' && has_more == false) {
+                                            clearInterval(interval);
+                                            getMessages(thread_id).then((resp) => {
+                                                message = resp.data[0].content[0].text.value;
+                                                addMessageToLog('chat', message).then((resp) => {
+                                                    log_id = resp.log_id;
+                                                    storeLogInSession(log_id);
+                                                });
+                                                addMessageToContent('chat', message);
+                                                message_textarea.LoadingOverlay('hide');
                                             });
-                                            addMessageToContent ('chat', message);
-                                            message_textarea.LoadingOverlay('hide');
-                                        });
-                                    }
+                                        }
+                                    });
                                 });
-                            });
-                        }, 5000);
-                    })  
-                });
-            } else {
-                addMessage(thread_id, message).then((resp) => {
-                    runTheThread (thread_id).then((resp) => {
+                            }, 5000);
+                        })
+                    });
+                } else {
+                    addMessage(thread_id, message).then((resp) => {
+                        runTheThread(thread_id).then((resp) => {
                             let run_id = resp.id;
                             let interval = setInterval(() => {
                                 listRunSteps(thread_id, run_id).then((resp) => {
                                     let type = resp.data[0].type;
-                                    if(type == 'message_creation') {
+                                    if (type == 'message_creation') {
                                         let has_more = resp.has_more;
                                         getRunStatus(thread_id, run_id).then((resp) => {
                                             let status = resp.status;
-                                            if(status == 'completed' && has_more == false){
+                                            if (status == 'completed' && has_more == false) {
                                                 clearInterval(interval);
                                                 getMessages(thread_id).then((resp) => {
                                                     message = resp.data[0].content[0].text.value;
@@ -206,7 +206,7 @@
                                                         log_id = resp.log_id;
                                                         storeLogInSession(log_id);
                                                     });
-                                                    addMessageToContent ('chat', message);
+                                                    addMessageToContent('chat', message);
                                                     message_textarea.LoadingOverlay('hide');
                                                 });
                                             }
@@ -215,13 +215,13 @@
                                         let function_name = resp.data[0].step_details.tool_calls[0].function.name;
                                         let data = JSON.parse(resp.data[0].step_details.tool_calls[0].function.arguments);
                                         let tool_call_id = resp.data[0].step_details.tool_calls[0].id;
-                                        if(function_name == 'get_products'){
-                                            if(data.symbol){
+                                        if (function_name == 'get_products') {
+                                            if (data.symbol) {
                                                 clearInterval(interval);
-                                                addMessageToContent ('chat', waiting_message);
+                                                addMessageToContent('chat', waiting_message);
                                                 getProducts(data.symbol).then((resp) => {
                                                     let output = JSON.stringify(resp);
-                                                    if(output == '[]'){
+                                                    if (output == '[]') {
                                                         output = 'Não existe em stock.';
                                                     }
                                                     submitToolOutputsToRun(thread_id, run_id, tool_call_id, output).then((resp) => {
@@ -229,11 +229,11 @@
                                                         let interval_function = setInterval(() => {
                                                             getRunStatus(thread_id, run_id).then((resp) => {
                                                                 status = resp.status;
-                                                                if(status == 'completed'){
+                                                                if (status == 'completed') {
                                                                     clearInterval(interval_function);
                                                                     getMessages(thread_id).then((resp) => {
                                                                         message = resp.data[0].content[0].text.value;
-                                                                        addMessageToContent ('chat', message);
+                                                                        addMessageToContent('chat', message);
                                                                         message_textarea.LoadingOverlay('hide');
                                                                     });
                                                                 }
@@ -243,9 +243,9 @@
                                                 });
                                             }
                                         }
-                                        if(function_name == 'send_email'){
-                                            if(data.data){
-                                                addMessageToContent ('chat', email_waiting_message);
+                                        if (function_name == 'send_email') {
+                                            if (data.data) {
+                                                addMessageToContent('chat', email_waiting_message);
                                                 clearInterval(interval);
                                                 sendEmail(data).then(() => {
                                                     submitToolOutputsToRun(thread_id, run_id, tool_call_id, true).then((resp) => {
@@ -253,11 +253,11 @@
                                                         let interval_function2 = setInterval(() => {
                                                             getRunStatus(thread_id, run_id).then((resp) => {
                                                                 status = resp.status;
-                                                                if(status == 'completed'){
+                                                                if (status == 'completed') {
                                                                     clearInterval(interval_function2);
                                                                     getMessages(thread_id).then((resp) => {
                                                                         message = resp.data[0].content[0].text.value;
-                                                                        addMessageToContent ('chat', message);
+                                                                        addMessageToContent('chat', message);
                                                                         message_textarea.LoadingOverlay('hide');
                                                                     });
                                                                 }
@@ -426,7 +426,7 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     data: data
-                });          
+                });
             } catch (error) {
                 console.log(error);
             }
