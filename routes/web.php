@@ -110,6 +110,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
         Route::get('delete-form/{form_id}', 'FormsAssemblyController@deleteForm');
         Route::post('form-send', 'FormsAssemblyController@formSend');
     });
+
+    // Forms Inbox
+    Route::prefix('forms-inboxes')->group(function () {
+        Route::get('/', 'FormsInboxController@index')->name('forms-inboxes.index');
+        Route::get('/{form_data_id}', 'FormsInboxController@form')->name('forms-inboxes.form');
+    });
 });
 
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {

@@ -198,6 +198,16 @@
                             </a>
                         </li>
                     @endcan
+                    @can('forms_inbox_access')
+                        <li class="c-sidebar-nav-item">
+                            <a href="{{ route("admin.forms-inboxes.index") }}" class="c-sidebar-nav-link {{ request()->is("admin/forms-inboxes") || request()->is("admin/forms-inboxes/*") ? "c-active" : "" }}">
+                                <i class="fa-fw fas fa-envelope c-sidebar-nav-icon">
+
+                                </i>
+                                {{ trans('cruds.formsInbox.title') }}
+                            </a>
+                        </li>
+                    @endcan
                 </ul>
             </li>
         @endcan

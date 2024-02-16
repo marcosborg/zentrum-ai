@@ -265,5 +265,9 @@ return [
         'title'          => 'Form Assembly',
         'title_singular' => 'Form Assembly',
     ],
+    'formsInbox' => [
+        'title'          => 'Forms Inbox',
+        'title_singular' => 'Forms Inbox',
+    ],
 
 ];
