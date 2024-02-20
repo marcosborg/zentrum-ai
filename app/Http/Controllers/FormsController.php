@@ -22,5 +22,9 @@ class FormsController extends Controller
         $form_data->form_id = $request->form_id;
         $form_data->data = json_encode($request->data);
         $form_data->save();
+
+        //SEND BY API
+
+        
     }
 }
