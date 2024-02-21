@@ -194,7 +194,7 @@
                 });
             } else {
                 $.post({
-                    url: '/admin/form/form-send',
+                    url: '/form/form-send',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
