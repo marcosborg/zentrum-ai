@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Form;
 use App\Models\FormData;
+use App\Http\Controllers\Traits\Iftech;
 
 class FormsController extends Controller
 {
+
+    use Iftech;
 
     public function index($form_id)
     {
@@ -23,8 +26,17 @@ class FormsController extends Controller
         $form_data->data = json_encode($request->data);
         $form_data->save();
 
+        $data = json_encode($request->data);
+
         //SEND BY API
 
-        
+        //LOGIN
+
+        $access_token = $this->login()['access_token'];
+
+        $send_form = $this->sendForm($access_token, $data);
+
+        return $send_form;
+
     }
 }
