@@ -26,7 +26,7 @@ class FormsController extends Controller
         $form_data->data = json_encode($request->data);
         $form_data->save();
 
-        $data = json_encode($request->data);
+        $data = json_encode($form_data);
 
         //SEND BY API
 
