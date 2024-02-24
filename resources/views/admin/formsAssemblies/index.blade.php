@@ -14,6 +14,8 @@
 <div class="card">
     <div class="card-header">
         {{ trans('cruds.formsAssembly.title') }}
+        <span class="pull-right"><strong>All forms of this project: </strong><a target="_new"
+                href="{{ url('/form/all/' . $project_id) }}">{{ url('/form/all/' . $project_id) }}</a></span>
     </div>
 
     <div class="card-body">

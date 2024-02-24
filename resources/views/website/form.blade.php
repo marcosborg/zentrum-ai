@@ -193,6 +193,7 @@
                     icon: "error"
                 });
             } else {
+                $.LoadingOverlay('show');
                 $.post({
                     url: '/form/form-send',
                     headers: {
@@ -203,6 +204,7 @@
                         data: data
                     },
                     success: () => {
+                        $.LoadingOverlay('hide');
                         Swal.fire({
                             title: "Sucesso!",
                             text: "Formulário enviado!",

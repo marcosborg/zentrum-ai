@@ -39,8 +39,6 @@ class FormsAssemblyController extends Controller
             $form_id = $forms[0]->id;
         }
 
-
-
         return view('admin.formsAssemblies.index', compact([
             'projects',
             'project_id',

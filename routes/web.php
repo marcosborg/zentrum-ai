@@ -154,4 +154,5 @@ Route::prefix('api')->group(function () {
 Route::prefix('form')->group(function () {
     Route::get('{form_id}', 'FormsController@index');
     Route::post('form-send', 'FormsController@formSend');
+    Route::get('all/{project_id}', 'FormsController@all');
 });

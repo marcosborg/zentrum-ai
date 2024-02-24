@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Form;
 use App\Models\FormData;
 use App\Http\Controllers\Traits\Iftech;
+use Illuminate\Support\Facades\Notification;
 
 class FormsController extends Controller
 {
@@ -21,6 +22,7 @@ class FormsController extends Controller
 
     public function formSend(Request $request)
     {
+
         $form_data = new FormData;
         $form_data->form_id = $request->form_id;
         $form_data->data = json_encode($request->data);
@@ -28,9 +30,13 @@ class FormsController extends Controller
 
         $data = json_encode($form_data);
 
-        //SEND BY API
+        $form_data->load('form.project');
+        $form_data->data = json_decode($form_data->data);
 
-        //LOGIN
+        Notification::route('mail', env('COMERCIAL_EMAIL'))
+            ->notify(new \App\Notifications\FormSubmit($form_data));
+
+        //SEND BY API
 
         $access_token = $this->login()['access_token'];
 
@@ -38,5 +44,12 @@ class FormsController extends Controller
 
         return $send_form;
 
+    }
+
+    public function all($project_id)
+    {
+        $forms = Form::where('project_id', $project_id)->get()->load('project');
+
+        return view('website.all', compact('forms'));
     }
 }
