@@ -149,7 +149,7 @@
         submitForm = () => {
             const form_id = {{ $form->id }};
             var fields = $('.form-field');
-            let data = [];
+            let formData = new FormData(); // Usando FormData para lidar com os dados do formulário, incluindo arquivos
             let validation = '';
             fields.each((i, v) => {
                 let label = $(v).data('label');
@@ -157,35 +157,23 @@
                 let name = $(v).attr('name');
                 let type = $(v).data('type');
                 let required = $(v).data('required');
-                let data_field = {
-                    label: label,
-                    value: value,
-                    name: name,
-                    type: type,
-                    required: required
-                };
                 if(required == true && value == ''){
                     validation += '<p>O campo "' + label + '" é obrigatório.</p>';
                 }
-                if(type == 'radio'){
-                    if($(v).is(':checked')) {
-                        data.push(data_field);
+                if(type == 'file') { // Tratamento especial para campos do tipo 'file'
+                    let fileInput = $(v)[0];
+                    if(fileInput.files.length > 0) {
+                        formData.append(name, fileInput.files[0]); // Adiciona o arquivo ao FormData
                     }
                 } else if(type == 'checkbox') {
-                    if($(v).is(':checked')) {
-                        data_field.value = true
-                        data.push(data_field);
-                    } else {
-                        data_field.value = false
-                        data.push(data_field);
-                        if(data_field.required == true){
-                            validation += '<p>O campo "' + label + '" é obrigatório.</p>';
-                        }
-                    }
+                    formData.append(name, $(v).is(':checked')); // Trata checkboxes
                 } else {
-                    data.push(data_field);
+                    formData.append(name, value); // Adiciona outros tipos de campo ao FormData
                 }
             });
+
+            formData.append('form_id', form_id); // Adiciona o ID do formulário ao FormData
+
             if(validation !== ''){
                 Swal.fire({
                     title: "Faltam dados!",
@@ -194,31 +182,33 @@
                 });
             } else {
                 $.LoadingOverlay('show');
-                $.post({
+                $.ajax({
                     url: '/form/form-send',
+                    type: 'POST',
+                    data: formData,
+                    processData: false, // Impede que o jQuery processe os dados
+                    contentType: false, // Impede que o jQuery defina o tipo de conteúdo
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    data: {
-                        form_id: form_id,
-                        data: data
-                    },
-                    success: () => {
+                    success: (resp) => {
                         $.LoadingOverlay('hide');
+                        console.log(resp);
                         Swal.fire({
                             title: "Sucesso!",
                             text: "Formulário enviado!",
                             icon: "success"
                         }).then(() => {
-                            location.reload();
+                            //location.reload();
                         });
                     },
                     error: (error) => {
                         console.log(error);
                     }
-                })
+                });
             }
         }
+
     </script>
 </body>
 

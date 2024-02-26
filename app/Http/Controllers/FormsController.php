@@ -7,6 +7,7 @@ use App\Models\Form;
 use App\Models\FormData;
 use App\Http\Controllers\Traits\Iftech;
 use Illuminate\Support\Facades\Notification;
+use \App\Models\FormField;
 
 class FormsController extends Controller
 {
@@ -23,9 +24,49 @@ class FormsController extends Controller
     public function formSend(Request $request)
     {
 
+        $all = $request->all();
+
+        $fields = [];
+        $form_id = null;
+
+        foreach ($all as $key => $value) {
+            if ($key == 'form_id') {
+                $form_id = $value;
+            }
+        }
+
+        foreach ($all as $key => $value) {
+            if ($key != 'form_id') {
+                $form_field = FormField::where([
+                    'form_id' => $form_id,
+                    'name' => $key,
+                ])->first();
+                if ($request->hasFile($key)) {
+                    if ($request->file($key)->isValid()) {
+                        $path = $request->file($key)->store('uploads', 'public');
+                        $fields[] = [
+                            'name' => $key,
+                            'value' => url('/') . '/storage/' . $path,
+                            'label' => $form_field->label,
+                            'type' => $form_field->type,
+                            'required' => $form_field->required
+                        ];
+                    }
+                } else {
+                    $fields[] = [
+                        'name' => $key,
+                        'value' => $value,
+                        'label' => $form_field->label,
+                        'type' => $form_field->type,
+                        'required' => $form_field->required
+                    ];
+                }
+            }
+        }
+
         $form_data = new FormData;
-        $form_data->form_id = $request->form_id;
-        $form_data->data = json_encode($request->data);
+        $form_data->form_id = $form_id;
+        $form_data->data = json_encode($fields);
         $form_data->save();
 
         $data = json_encode($form_data);
