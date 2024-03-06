@@ -112,7 +112,7 @@
     <script>
         const timeout = 3000;
         const first_message = 'Em que posso ajudar?';
-        const waiting_message = 'Peço que aguarde enquanto procuro. Pode demorar um pouco.';
+        const waiting_message = 'Não saia desta página nem clique em outros links enquanto procuro. Pode demorar um pouco.';
         const email_waiting_message = 'Peço que aguarde enquanto envio o pedido.';
         const chat_container = $('#chat-container');
         const assistant_id = {{ $assistant-> id }};
@@ -135,11 +135,11 @@
                                     });
                                 });
                             } else {
-                                addMessageToContent('chat', first_message);
+                                //addMessageToContent('chat', first_message);
                             }
                         });
                     } else {
-                        addMessageToContent('chat', first_message);
+                        //addMessageToContent('chat', first_message);
                     }
                 });
             }, timeout);
