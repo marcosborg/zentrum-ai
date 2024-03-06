@@ -153,6 +153,7 @@
         sendMessage = () => {
             let message = message_textarea.val();
             if (message.length > 0) {
+                $('#message-textarea').attr('disabled', true);
                 addMessageToLog('user', message).then((resp) => {
                     log_id = resp.log_id;
                     storeLogInSession(log_id);
@@ -180,6 +181,8 @@
                                                 });
                                                 addMessageToContent('chat', message);
                                                 message_textarea.LoadingOverlay('hide');
+                                                $('#message-textarea').attr('disabled', false);
+                                                $('#message-textarea').focus();
                                             });
                                         }
                                     });
@@ -208,6 +211,8 @@
                                                     });
                                                     addMessageToContent('chat', message);
                                                     message_textarea.LoadingOverlay('hide');
+                                                    $('#message-textarea').attr('disabled', false);
+                                                    $('#message-textarea').focus();
                                                 });
                                             }
                                         });
@@ -235,6 +240,8 @@
                                                                         message = resp.data[0].content[0].text.value;
                                                                         addMessageToContent('chat', message);
                                                                         message_textarea.LoadingOverlay('hide');
+                                                                        $('#message-textarea').attr('disabled', false);
+                                                                        $('#message-textarea').focus();
                                                                     });
                                                                 }
                                                             });
@@ -259,6 +266,8 @@
                                                                         message = resp.data[0].content[0].text.value;
                                                                         addMessageToContent('chat', message);
                                                                         message_textarea.LoadingOverlay('hide');
+                                                                        $('#message-textarea').attr('disabled', false);
+                                                                        $('#message-textarea').focus();
                                                                     });
                                                                 }
                                                             });
@@ -270,6 +279,8 @@
                                     } else {
                                         clearInterval(interval);
                                         message_textarea.LoadingOverlay('hide');
+                                        $('#message-textarea').attr('disabled', false);
+                                        $('#message-textarea').focus();
                                     }
                                 });
                             }, 5000);
