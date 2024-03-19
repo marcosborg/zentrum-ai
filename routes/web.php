@@ -156,3 +156,5 @@ Route::prefix('form')->group(function () {
     Route::post('form-send', 'FormsController@formSend');
     Route::get('all/{project_id}', 'FormsController@all');
 });
+
+Route::get('logistics', 'LogisticsController@index');
