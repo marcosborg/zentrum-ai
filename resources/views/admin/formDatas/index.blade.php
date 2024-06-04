@@ -32,6 +32,9 @@
                             {{ trans('cruds.formData.fields.data') }}
                         </th>
                         <th>
+                            {{ trans('cruds.formData.fields.done') }}
+                        </th>
+                        <th>
                             &nbsp;
                         </th>
                     </tr>
@@ -50,6 +53,10 @@
                             </td>
                             <td>
                                 {{ $formData->data ?? '' }}
+                            </td>
+                            <td>
+                                <span style="display:none">{{ $formData->done ?? '' }}</span>
+                                <input type="checkbox" disabled="disabled" {{ $formData->done ? 'checked' : '' }}>
                             </td>
                             <td>
                                 @can('form_data_show')

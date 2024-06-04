@@ -22,6 +22,7 @@ class FormData extends Model
     protected $fillable = [
         'form_id',
         'data',
+        'done',
         'created_at',
         'updated_at',
         'deleted_at',

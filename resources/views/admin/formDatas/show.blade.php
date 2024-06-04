@@ -39,6 +39,14 @@
                             {{ $formData->data }}
                         </td>
                     </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.formData.fields.done') }}
+                        </th>
+                        <td>
+                            <input type="checkbox" disabled="disabled" {{ $formData->done ? 'checked' : '' }}>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
             <div class="form-group">

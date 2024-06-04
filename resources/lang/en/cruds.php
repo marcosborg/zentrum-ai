@@ -259,6 +259,8 @@ return [
             'updated_at_helper' => ' ',
             'deleted_at'        => 'Deleted at',
             'deleted_at_helper' => ' ',
+            'done'              => 'Tratado',
+            'done_helper'       => ' ',
         ],
     ],
     'formsAssembly' => [
