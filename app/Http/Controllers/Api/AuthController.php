@@ -147,7 +147,10 @@ class AuthController extends Controller
 
     public function formDatas()
     {
-        $form_datas = FormData::where('form_id', 3)->orderBy('created_at', 'desc')->limit(50)->get();
+        $form_datas = FormData::where([
+            'form_id' => 3,
+            'done' => false,
+        ])->orderBy('created_at', 'desc')->get();
         $convertedFormDatas = $form_datas->map(function ($form_data) {
             $form_data->data = json_decode($form_data->data, true);
             return $form_data;
