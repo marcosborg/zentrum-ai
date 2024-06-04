@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use App\Models\FormData;
 
 class AuthController extends Controller
 {
@@ -58,16 +59,18 @@ class AuthController extends Controller
 
         $curl = curl_init();
 
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://api.openai.com/v1/chat/completions',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => '{
+        curl_setopt_array(
+            $curl,
+            array(
+                CURLOPT_URL => 'https://api.openai.com/v1/chat/completions',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => '{
                     "model": "gpt-4-turbo",
                     "messages": [
                     {
@@ -88,18 +91,75 @@ class AuthController extends Controller
                     ],
                     "max_tokens": 300
                 }',
-            CURLOPT_HTTPHEADER => array(
-                'Content-Type: application/json',
-                'Authorization: Bearer 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',
-                'Cookie: __cf_bm=mfjslVS8TdkRobV1VnhRAWjyJW8YwpNfSjg3mWEoq2g-1717500710-1.0.1.1-l5.TgeAi6Kde5os1.ebnIwm9jqTGCP5i42yQKCI6Ou_SneBF1Jkz7aMXtri7Cb9Sk85RriqRe6Vja7ItaZQVWA; _cfuvid=dbSe_.tGKExExdaG63Bek8FgTdciY6ksZLchLe5qc.g-1717500710977-0.0.1.1-604800000'
-            ),
-        )
+                CURLOPT_HTTPHEADER => array(
+                    'Content-Type: application/json',
+                    'Authorization: Bearer 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',
+                    'Cookie: __cf_bm=mfjslVS8TdkRobV1VnhRAWjyJW8YwpNfSjg3mWEoq2g-1717500710-1.0.1.1-l5.TgeAi6Kde5os1.ebnIwm9jqTGCP5i42yQKCI6Ou_SneBF1Jkz7aMXtri7Cb9Sk85RriqRe6Vja7ItaZQVWA; _cfuvid=dbSe_.tGKExExdaG63Bek8FgTdciY6ksZLchLe5qc.g-1717500710977-0.0.1.1-604800000'
+                ),
+            )
         );
 
         $response = curl_exec($curl);
 
         curl_close($curl);
         return $response;
+    }
 
+    public function getUser(Request $request)
+    {
+        $user = auth()->user();
+        return $user;
+    }
+
+    public function updateUser(Request $request)
+    {
+        if ($request->password == '') {
+            $request->validate([
+                'name' => 'required',
+                'email' => 'required|email',
+            ], [], [
+                'name' => 'Nome',
+                'email' => 'Email'
+            ]);
+        } else {
+            $request->validate([
+                'name' => 'required|max:255',
+                'email' => 'required|max:255',
+                'password' => 'required|min:6',
+                'password_confirm' => 'same:password'
+            ], [], [
+                'name' => 'Nome',
+                'email' => 'Email',
+                'password' => 'Password',
+                'password_confirm' => 'Confirmação da password'
+            ]);
+        }
+
+        $user = User::find(auth()->user()->id);
+        $user->name = $request->name;
+        $user->email = $request->email;
+        if ($request->password) {
+            $user->password = bcrypt($request->password);
+        }
+        $user->save();
+        return $user;
+    }
+
+    public function formDatas()
+    {
+        $form_datas = FormData::where('form_id', 3)->orderBy('created_at', 'desc')->limit(50)->get();
+        $convertedFormDatas = $form_datas->map(function ($form_data) {
+            $form_data->data = json_decode($form_data->data, true);
+            return $form_data;
+        });
+
+        return $convertedFormDatas;
+    }
+
+    public function formData($form_data_id)
+    {
+        $form_data = FormData::find($form_data_id);
+        $form_data->data = json_decode($form_data->data, true);
+        return $form_data;
     }
 }
