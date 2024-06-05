@@ -74,7 +74,7 @@ class AuthController extends Controller
 
         curl_close($curl);
 
-        return $response;
+        return $response['ParsedResults'];
     }
 
     public function getUser(Request $request)
