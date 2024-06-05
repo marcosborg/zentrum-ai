@@ -8,7 +8,6 @@ use App\Models\User;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use App\Models\FormData;
-use thiagoalessio\TesseractOCR\TesseractOCR;
 
 class AuthController extends Controller
 {
@@ -58,7 +57,7 @@ class AuthController extends Controller
 
         $image = 'https://ai.airbagszentrum.com/images/' . $fileName;
 
-        $ocrText = (new TesseractOCR($image))->run();
+        
 
         return $image;
     }
