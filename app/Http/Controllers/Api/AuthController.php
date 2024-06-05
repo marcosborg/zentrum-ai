@@ -58,6 +58,7 @@ class AuthController extends Controller
         $image = 'https://ai.airbagszentrum.com/images/' . $fileName;
 
         $curl = curl_init();
+        
 
         curl_setopt_array(
             $curl,
