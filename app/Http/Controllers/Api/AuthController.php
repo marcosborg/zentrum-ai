@@ -79,7 +79,7 @@ class AuthController extends Controller
                         "content": [
                         {
                             "type": "text",
-                            "text": "quero que devolvas as referencias na etiqueta desta peça."
+                            "text": "Quero que devolvas as referencias na etiqueta desta peça. Mas com muito rigor. Não podes errar as sequencias de números e letras."
                         },
                         {
                             "type": "image_url",
