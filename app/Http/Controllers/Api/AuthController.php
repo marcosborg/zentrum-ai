@@ -79,7 +79,7 @@ class AuthController extends Controller
                         "content": [
                         {
                             "type": "text",
-                            "text": "Quero que tentes identificar a peça automóvel e que devolvas num json o nome da peça em portugues, bem como todas as referencias que encontrares nas etiquetas. Não quero uma descrição. Apenas name e references num array. As referências têm de ser exatamente as sequencias de números que encontras na peça. Não quero que inventes nada."
+                            "text": "Identifica a peça automóvel e devolve num json o nome da peça em portugues, e as referencias que encontrares na imagem. Não quero uma descrição. Apenas name e references num array. As referências têm de ser exatamente as que conseguires ler na imagem."
                         },
                         {
                             "type": "image_url",
