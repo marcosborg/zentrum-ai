@@ -57,59 +57,24 @@ class AuthController extends Controller
 
         $image = 'https://ai.airbagszentrum.com/images/' . $fileName;
 
-        return [
-            'image' => $image,
-        ];
-
-        /*
-
         $curl = curl_init();
 
-        curl_setopt_array(
-            $curl,
-            array(
-                CURLOPT_URL => 'https://api.openai.com/v1/chat/completions',
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => 'POST',
-                CURLOPT_POSTFIELDS => '{
-                    "model": "gpt-4-turbo",
-                    "messages": [
-                    {
-                        "role": "user",
-                        "content": [
-                        {
-                            "type": "text",
-                            "text": "Quero que devolvas as referencias na etiqueta desta peça. Mas com muito rigor. Não podes errar as sequencias de números e"
-                        },
-                        {
-                            "type": "image_url",
-                            "image_url": {
-                            "url": "' . $image . '"
-                            }
-                        }
-                        ]
-                    }
-                    ],
-                    "max_tokens": 300
-                }',
-                CURLOPT_HTTPHEADER => array(
-                    'Content-Type: application/json',
-                    'Authorization: Bearer ' . env('OPENAI_API_KEY'),
-                ),
-            )
-        );
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://api.ocr.space/parse/imageurl?apikey=' . env('OCR_API') . '&url=' . $image,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+        ));
 
         $response = curl_exec($curl);
 
         curl_close($curl);
-        return $response;
 
-        */
+        return $response;
     }
 
     public function getUser(Request $request)
