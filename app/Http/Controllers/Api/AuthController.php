@@ -202,4 +202,11 @@ class AuthController extends Controller
         }
         return $product;
     }
+
+    public function updateState($form_data_id)
+    {
+        $form_data = FormData::find($form_data_id);
+        $form_data->done = 1;
+        $form_data->save();
+    }
 }
