@@ -57,6 +57,8 @@ class AuthController extends Controller
 
         $image = 'https://ai.airbagszentrum.com/images/' . $fileName;
 
+        //$image = 'https://ai.airbagszentrum.com/images/aR5nNSA8Ma.jpg';
+
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
@@ -74,8 +76,52 @@ class AuthController extends Controller
 
         curl_close($curl);
 
-        return json_decode($response)['ParsedResults'];
-        
+        $ocrText = json_decode($response)->ParsedResults[0]->ParsedText;
+
+        // Separar as linhas
+        $lines = explode("\n", $ocrText);
+
+        // Remover espaços extras de cada linha
+        $cleanedLines = array_map('trim', $lines);
+
+        // Opcional: Remover linhas vazias, se houver
+        $cleanedLines = array_filter($cleanedLines, function ($line) {
+            return !empty($line);
+        });
+
+        // Resetar as chaves do array (opcional, se precisar de um array indexado)
+        $cleanedLines = array_values($cleanedLines);
+
+        // Remover todos os espaços de cada item do array
+        $cleanedArray = array_map(function ($item) {
+            return str_replace(' ', '', $item);
+        }, $cleanedLines);
+
+        // Filtrar o array usando a função isValidReference
+        $filteredArray = array_filter($cleanedArray, [$this, 'isValidReference']);
+
+        // Reindexar o array
+        $filteredArray = array_values($filteredArray);
+
+        // Exibir o resultado
+        return response()->json($filteredArray);
+    }
+
+    // Função para determinar se um item é uma referência válida
+    public function isValidReference($item)
+    {
+        // Verificar se o item tem mais de 5 caracteres e menos de 14 caracteres
+        $length = strlen($item);
+        if ($length <= 5 || $length >= 14) {
+            return false;
+        }
+
+        // Verificar se o item contém apenas letras e números
+        if (preg_match('/[^A-Za-z0-9]/', $item)) {
+            return false;
+        }
+
+        return true;
     }
 
     public function getUser(Request $request)

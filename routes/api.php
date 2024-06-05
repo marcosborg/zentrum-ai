@@ -4,7 +4,7 @@ Route::post('login', 'Api\\AuthController@login');
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
 
-    Route::post('send-photo', 'Api\\AuthController@sendPhoto');
+    Route::get('send-photo', 'Api\\AuthController@sendPhoto');
     Route::get('get-user', 'Api\\AuthController@getUser');
     Route::post('update-user', 'Api\\AuthController@updateUser');
     Route::get('form-datas', 'Api\\AuthController@formDatas');
