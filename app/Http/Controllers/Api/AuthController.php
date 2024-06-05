@@ -58,7 +58,7 @@ class AuthController extends Controller
         $image = 'https://ai.airbagszentrum.com/images/' . $fileName;
 
         $curl = curl_init();
-        
+
 
         curl_setopt_array(
             $curl,
@@ -94,8 +94,7 @@ class AuthController extends Controller
                 }',
                 CURLOPT_HTTPHEADER => array(
                     'Content-Type: application/json',
-                    'Authorization: Bearer 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',
-                    'Cookie: __cf_bm=mfjslVS8TdkRobV1VnhRAWjyJW8YwpNfSjg3mWEoq2g-1717500710-1.0.1.1-l5.TgeAi6Kde5os1.ebnIwm9jqTGCP5i42yQKCI6Ou_SneBF1Jkz7aMXtri7Cb9Sk85RriqRe6Vja7ItaZQVWA; _cfuvid=dbSe_.tGKExExdaG63Bek8FgTdciY6ksZLchLe5qc.g-1717500710977-0.0.1.1-604800000'
+                    'Authorization: Bearer ' . env('OPENAI_API_KEY'),
                 ),
             )
         );
