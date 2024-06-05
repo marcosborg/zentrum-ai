@@ -46,6 +46,10 @@ class ComposerStaticInitfbdea7bd0c72db7b803b8be4de6c88c4
         array (
             'voku\\' => 5,
         ),
+        't' => 
+        array (
+            'thiagoalessio\\TesseractOCR\\' => 27,
+        ),
         'Z' => 
         array (
             'ZipStream\\' => 10,
@@ -200,6 +204,10 @@ class ComposerStaticInitfbdea7bd0c72db7b803b8be4de6c88c4
         'voku\\' => 
         array (
             0 => __DIR__ . '/..' . '/voku/portable-ascii/src/voku',
+        ),
+        'thiagoalessio\\TesseractOCR\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/thiagoalessio/tesseract_ocr/src',
         ),
         'ZipStream\\' => 
         array (
@@ -395,8 +403,8 @@ class ComposerStaticInitfbdea7bd0c72db7b803b8be4de6c88c4
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
-            1 => __DIR__ . '/..' . '/psr/http-factory/src',
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -592,17 +600,21 @@ class ComposerStaticInitfbdea7bd0c72db7b803b8be4de6c88c4
         'App\\Http\\Controllers\\Admin\\FormController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/FormController.php',
         'App\\Http\\Controllers\\Admin\\FormDataController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/FormDataController.php',
         'App\\Http\\Controllers\\Admin\\FormFieldsController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/FormFieldsController.php',
+        'App\\Http\\Controllers\\Admin\\FormsAssemblyController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/FormsAssemblyController.php',
+        'App\\Http\\Controllers\\Admin\\FormsInboxController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/FormsInboxController.php',
         'App\\Http\\Controllers\\Admin\\HomeController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/HomeController.php',
         'App\\Http\\Controllers\\Admin\\InstructionController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/InstructionController.php',
         'App\\Http\\Controllers\\Admin\\LogController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/LogController.php',
         'App\\Http\\Controllers\\Admin\\LogHistoryController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/LogHistoryController.php',
         'App\\Http\\Controllers\\Admin\\LogMessageController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/LogMessageController.php',
         'App\\Http\\Controllers\\Admin\\OpenaiController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/OpenaiController.php',
+        'App\\Http\\Controllers\\Admin\\PartController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/PartController.php',
         'App\\Http\\Controllers\\Admin\\PermissionsController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/PermissionsController.php',
         'App\\Http\\Controllers\\Admin\\ProjectController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/ProjectController.php',
         'App\\Http\\Controllers\\Admin\\RolesController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/RolesController.php',
         'App\\Http\\Controllers\\Admin\\TrainingController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/TrainingController.php',
         'App\\Http\\Controllers\\Admin\\UsersController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/UsersController.php',
+        'App\\Http\\Controllers\\Api\\AuthController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/AuthController.php',
         'App\\Http\\Controllers\\Auth\\ChangePasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ChangePasswordController.php',
         'App\\Http\\Controllers\\Auth\\ConfirmPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ConfirmPasswordController.php',
         'App\\Http\\Controllers\\Auth\\ForgotPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ForgotPasswordController.php',
@@ -610,9 +622,16 @@ class ComposerStaticInitfbdea7bd0c72db7b803b8be4de6c88c4
         'App\\Http\\Controllers\\Auth\\RegisterController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/RegisterController.php',
         'App\\Http\\Controllers\\Auth\\ResetPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ResetPasswordController.php',
         'App\\Http\\Controllers\\Auth\\VerificationController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/VerificationController.php',
+        'App\\Http\\Controllers\\ChatController' => __DIR__ . '/../..' . '/app/Http/Controllers/ChatController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
+        'App\\Http\\Controllers\\FormsController' => __DIR__ . '/../..' . '/app/Http/Controllers/FormsController.php',
         'App\\Http\\Controllers\\HomeController' => __DIR__ . '/../..' . '/app/Http/Controllers/HomeController.php',
+        'App\\Http\\Controllers\\LogisticsController' => __DIR__ . '/../..' . '/app/Http/Controllers/LogisticsController.php',
+        'App\\Http\\Controllers\\Traits\\Iftech' => __DIR__ . '/../..' . '/app/Http/Controllers/Traits/Iftech.php',
         'App\\Http\\Controllers\\Traits\\MediaUploadingTrait' => __DIR__ . '/../..' . '/app/Http/Controllers/Traits/MediaUploadingTrait.php',
+        'App\\Http\\Controllers\\Traits\\OpenAi' => __DIR__ . '/../..' . '/app/Http/Controllers/Traits/OpenAi.php',
+        'App\\Http\\Controllers\\Traits\\PrestashopApi' => __DIR__ . '/../..' . '/app/Http/Controllers/Traits/PrestashopApi.php',
+        'App\\Http\\Controllers\\WebsiteController' => __DIR__ . '/../..' . '/app/Http/Controllers/WebsiteController.php',
         'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
         'App\\Http\\Middleware\\AuthGates' => __DIR__ . '/../..' . '/app/Http/Middleware/AuthGates.php',
         'App\\Http\\Middleware\\Authenticate' => __DIR__ . '/../..' . '/app/Http/Middleware/Authenticate.php',
@@ -633,6 +652,7 @@ class ComposerStaticInitfbdea7bd0c72db7b803b8be4de6c88c4
         'App\\Http\\Requests\\MassDestroyLogMessageRequest' => __DIR__ . '/../..' . '/app/Http/Requests/MassDestroyLogMessageRequest.php',
         'App\\Http\\Requests\\MassDestroyLogRequest' => __DIR__ . '/../..' . '/app/Http/Requests/MassDestroyLogRequest.php',
         'App\\Http\\Requests\\MassDestroyOpenaiRequest' => __DIR__ . '/../..' . '/app/Http/Requests/MassDestroyOpenaiRequest.php',
+        'App\\Http\\Requests\\MassDestroyPartRequest' => __DIR__ . '/../..' . '/app/Http/Requests/MassDestroyPartRequest.php',
         'App\\Http\\Requests\\MassDestroyPermissionRequest' => __DIR__ . '/../..' . '/app/Http/Requests/MassDestroyPermissionRequest.php',
         'App\\Http\\Requests\\MassDestroyProjectRequest' => __DIR__ . '/../..' . '/app/Http/Requests/MassDestroyProjectRequest.php',
         'App\\Http\\Requests\\MassDestroyRoleRequest' => __DIR__ . '/../..' . '/app/Http/Requests/MassDestroyRoleRequest.php',
@@ -645,6 +665,7 @@ class ComposerStaticInitfbdea7bd0c72db7b803b8be4de6c88c4
         'App\\Http\\Requests\\StoreLogMessageRequest' => __DIR__ . '/../..' . '/app/Http/Requests/StoreLogMessageRequest.php',
         'App\\Http\\Requests\\StoreLogRequest' => __DIR__ . '/../..' . '/app/Http/Requests/StoreLogRequest.php',
         'App\\Http\\Requests\\StoreOpenaiRequest' => __DIR__ . '/../..' . '/app/Http/Requests/StoreOpenaiRequest.php',
+        'App\\Http\\Requests\\StorePartRequest' => __DIR__ . '/../..' . '/app/Http/Requests/StorePartRequest.php',
         'App\\Http\\Requests\\StorePermissionRequest' => __DIR__ . '/../..' . '/app/Http/Requests/StorePermissionRequest.php',
         'App\\Http\\Requests\\StoreProjectRequest' => __DIR__ . '/../..' . '/app/Http/Requests/StoreProjectRequest.php',
         'App\\Http\\Requests\\StoreRoleRequest' => __DIR__ . '/../..' . '/app/Http/Requests/StoreRoleRequest.php',
@@ -657,6 +678,7 @@ class ComposerStaticInitfbdea7bd0c72db7b803b8be4de6c88c4
         'App\\Http\\Requests\\UpdateLogMessageRequest' => __DIR__ . '/../..' . '/app/Http/Requests/UpdateLogMessageRequest.php',
         'App\\Http\\Requests\\UpdateLogRequest' => __DIR__ . '/../..' . '/app/Http/Requests/UpdateLogRequest.php',
         'App\\Http\\Requests\\UpdateOpenaiRequest' => __DIR__ . '/../..' . '/app/Http/Requests/UpdateOpenaiRequest.php',
+        'App\\Http\\Requests\\UpdatePartRequest' => __DIR__ . '/../..' . '/app/Http/Requests/UpdatePartRequest.php',
         'App\\Http\\Requests\\UpdatePasswordRequest' => __DIR__ . '/../..' . '/app/Http/Requests/UpdatePasswordRequest.php',
         'App\\Http\\Requests\\UpdatePermissionRequest' => __DIR__ . '/../..' . '/app/Http/Requests/UpdatePermissionRequest.php',
         'App\\Http\\Requests\\UpdateProfileRequest' => __DIR__ . '/../..' . '/app/Http/Requests/UpdateProfileRequest.php',
@@ -671,10 +693,13 @@ class ComposerStaticInitfbdea7bd0c72db7b803b8be4de6c88c4
         'App\\Models\\Log' => __DIR__ . '/../..' . '/app/Models/Log.php',
         'App\\Models\\LogMessage' => __DIR__ . '/../..' . '/app/Models/LogMessage.php',
         'App\\Models\\Openai' => __DIR__ . '/../..' . '/app/Models/Openai.php',
+        'App\\Models\\Part' => __DIR__ . '/../..' . '/app/Models/Part.php',
         'App\\Models\\Permission' => __DIR__ . '/../..' . '/app/Models/Permission.php',
         'App\\Models\\Project' => __DIR__ . '/../..' . '/app/Models/Project.php',
         'App\\Models\\Role' => __DIR__ . '/../..' . '/app/Models/Role.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
+        'App\\Notifications\\ChatContact' => __DIR__ . '/../..' . '/app/Notifications/ChatContact.php',
+        'App\\Notifications\\FormSubmit' => __DIR__ . '/../..' . '/app/Notifications/FormSubmit.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
         'App\\Providers\\AuthServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AuthServiceProvider.php',
         'App\\Providers\\BroadcastServiceProvider' => __DIR__ . '/../..' . '/app/Providers/BroadcastServiceProvider.php',
@@ -7004,6 +7029,17 @@ class ComposerStaticInitfbdea7bd0c72db7b803b8be4de6c88c4
         'ZipStream\\Zip64\\ExtendedInformationExtraField' => __DIR__ . '/..' . '/maennchen/zipstream-php/src/Zip64/ExtendedInformationExtraField.php',
         'ZipStream\\ZipStream' => __DIR__ . '/..' . '/maennchen/zipstream-php/src/ZipStream.php',
         'ZipStream\\Zs\\ExtendedInformationExtraField' => __DIR__ . '/..' . '/maennchen/zipstream-php/src/Zs/ExtendedInformationExtraField.php',
+        'thiagoalessio\\TesseractOCR\\Command' => __DIR__ . '/..' . '/thiagoalessio/tesseract_ocr/src/Command.php',
+        'thiagoalessio\\TesseractOCR\\FeatureNotAvailableException' => __DIR__ . '/..' . '/thiagoalessio/tesseract_ocr/src/FeatureNotAvailableException.php',
+        'thiagoalessio\\TesseractOCR\\FriendlyErrors' => __DIR__ . '/..' . '/thiagoalessio/tesseract_ocr/src/FriendlyErrors.php',
+        'thiagoalessio\\TesseractOCR\\ImageNotFoundException' => __DIR__ . '/..' . '/thiagoalessio/tesseract_ocr/src/ImageNotFoundException.php',
+        'thiagoalessio\\TesseractOCR\\NoWritePermissionsForOutputFile' => __DIR__ . '/..' . '/thiagoalessio/tesseract_ocr/src/NoWritePermissionsForOutputFile.php',
+        'thiagoalessio\\TesseractOCR\\Option' => __DIR__ . '/..' . '/thiagoalessio/tesseract_ocr/src/Option.php',
+        'thiagoalessio\\TesseractOCR\\Process' => __DIR__ . '/..' . '/thiagoalessio/tesseract_ocr/src/Process.php',
+        'thiagoalessio\\TesseractOCR\\TesseractNotFoundException' => __DIR__ . '/..' . '/thiagoalessio/tesseract_ocr/src/TesseractNotFoundException.php',
+        'thiagoalessio\\TesseractOCR\\TesseractOCR' => __DIR__ . '/..' . '/thiagoalessio/tesseract_ocr/src/TesseractOCR.php',
+        'thiagoalessio\\TesseractOCR\\TesseractOcrException' => __DIR__ . '/..' . '/thiagoalessio/tesseract_ocr/src/TesseractOcrException.php',
+        'thiagoalessio\\TesseractOCR\\UnsuccessfulCommandException' => __DIR__ . '/..' . '/thiagoalessio/tesseract_ocr/src/UnsuccessfulCommandException.php',
         'voku\\helper\\ASCII' => __DIR__ . '/..' . '/voku/portable-ascii/src/voku/helper/ASCII.php',
     );
 
