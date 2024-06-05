@@ -209,4 +209,10 @@ class AuthController extends Controller
         $form_data->done = 1;
         $form_data->save();
     }
+
+    public function prestashopCategories()
+    {
+
+        return $this->categories();
+    }
 }

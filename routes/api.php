@@ -11,5 +11,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('form-data/{form_data_id}', 'Api\\AuthController@formData');
     Route::post('search-stock', 'Api\\AuthController@searchStock');
     Route::get('update-state/{form_data_id}', 'Api\\AuthController@updateState');
+    Route::get('prestashop-categories', 'Api\\AuthController@prestashopCategories');
 
 });
