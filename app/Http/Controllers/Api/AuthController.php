@@ -74,7 +74,7 @@ class AuthController extends Controller
 
         curl_close($curl);
 
-        return $response['ParsedResults'][0];
+        return $response;
         
     }
 
