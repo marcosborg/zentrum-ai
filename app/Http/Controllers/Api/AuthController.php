@@ -57,7 +57,7 @@ class AuthController extends Controller
 
         $image = 'https://ai.airbagszentrum.com/images/' . $fileName;
 
-        return $image;
+        echo $image;
 
         /*
 
