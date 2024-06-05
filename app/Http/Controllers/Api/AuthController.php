@@ -8,9 +8,13 @@ use App\Models\User;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use App\Models\FormData;
+use App\Http\Controllers\Traits\PrestashopApi;
 
 class AuthController extends Controller
 {
+
+    use PrestashopApi;
+
     public function login(Request $request)
     {
         $request->validate([
@@ -183,5 +187,19 @@ class AuthController extends Controller
         $form_data = FormData::find($form_data_id);
         $form_data->data = json_decode($form_data->data, true);
         return $form_data;
+    }
+
+    public function searchStock(Request $request)
+    {
+
+        $product = null;
+
+        foreach ($request->codes as $code) {
+            $result = $this->zentrumSearch('https://techniczentrum.com', $code);
+            if ($result) {
+                $product = $result;
+            }
+        }
+        return $product;
     }
 }
