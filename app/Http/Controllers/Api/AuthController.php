@@ -215,4 +215,9 @@ class AuthController extends Controller
 
         return $this->categories();
     }
+
+    public function prestashopManufacturers()
+    {
+        return $this->manufacturers();
+    }
 }
