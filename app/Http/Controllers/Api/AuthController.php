@@ -240,6 +240,6 @@ class AuthController extends Controller
 
     public function uploadImage(Request $request)
     {
-        return $request;
+        return $this->savePhoto(($request));
     }
 }

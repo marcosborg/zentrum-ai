@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Traits;
+
 use Illuminate\Support\Str;
 
 trait PrestashopApi
@@ -126,44 +127,46 @@ trait PrestashopApi
 
         $curl = curl_init();
 
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://techniczentrum.com/api/manufacturers/' . $manufacturer_id . '?output_format=JSON&display=full',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'GET',
-            CURLOPT_HTTPHEADER => array(
-                'Authorization: Basic SlRVUjNDS0JXN0dWSzFVUUdKNzlSMk5VVU1QWUZNNkI6',
-            ),
-        )
+        curl_setopt_array(
+            $curl,
+            array(
+                CURLOPT_URL => 'https://techniczentrum.com/api/manufacturers/' . $manufacturer_id . '?output_format=JSON&display=full',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'GET',
+                CURLOPT_HTTPHEADER => array(
+                    'Authorization: Basic SlRVUjNDS0JXN0dWSzFVUUdKNzlSMk5VVU1QWUZNNkI6',
+                ),
+            )
         );
 
         $response = curl_exec($curl);
 
         curl_close($curl);
         return json_decode($response);
-        
+
 
     }
 
     public function newProduct($request)
     {
 
-$curl = curl_init();
+        $curl = curl_init();
 
-curl_setopt_array($curl, array(
-  CURLOPT_URL => 'https://techniczentrum.com/api/products',
-  CURLOPT_RETURNTRANSFER => true,
-  CURLOPT_ENCODING => '',
-  CURLOPT_MAXREDIRS => 10,
-  CURLOPT_TIMEOUT => 0,
-  CURLOPT_FOLLOWLOCATION => true,
-  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-  CURLOPT_CUSTOMREQUEST => 'POST',
-  CURLOPT_POSTFIELDS =>'<prestashop xmlns:xlink="http://www.w3.org/1999/xlink">
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://techniczentrum.com/api/products',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => '<prestashop xmlns:xlink="http://www.w3.org/1999/xlink">
   <product>
     <id_manufacturer>' . $request->id_manufacturer . '</id_manufacturer>
     <id_category_default>' . $request->id_category . '</id_category_default>
@@ -216,24 +219,53 @@ curl_setopt_array($curl, array(
   </product>
 </prestashop>
 ',
-  CURLOPT_HTTPHEADER => array(
-    'Content-Type: application/xml',
-    'Authorization: Basic SlRVUjNDS0JXN0dWSzFVUUdKNzlSMk5VVU1QWUZNNkI6',
-  ),
-));
+            CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/xml',
+                'Authorization: Basic SlRVUjNDS0JXN0dWSzFVUUdKNzlSMk5VVU1QWUZNNkI6',
+            ),
+        )
+        );
 
-$response = curl_exec($curl);
+        $response = curl_exec($curl);
 
-curl_close($curl);
+        curl_close($curl);
 
-// Analisar a resposta XML
-$xmlObject = simplexml_load_string($response);
+        // Analisar a resposta XML
+        $xmlObject = simplexml_load_string($response);
 
-// Extrair o valor do ID
-$id = (string) $xmlObject->product->id;
+        // Extrair o valor do ID
+        $id = (string) $xmlObject->product->id;
 
-// Retornar o ID como resposta JSON
-return response()->json(['id' => $id], 200);
+        // Retornar o ID como resposta JSON
+        return response()->json(['id' => $id], 200);
+
+    }
+
+    public function savePhoto($request)
+    {
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://techniczentrum.com/api/images/products/' . $request->product_id,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => array('image' => $request->image),
+            CURLOPT_HTTPHEADER => array(
+                'Authorization: Basic SlRVUjNDS0JXN0dWSzFVUUdKNzlSMk5VVU1QWUZNNkI6',
+            ),
+        )
+        );
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        return json_decode($response);
 
     }
 }
