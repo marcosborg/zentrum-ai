@@ -242,9 +242,4 @@ trait PrestashopApi
         return response()->json(['id' => $id], 200);
 
     }
-
-    public function savePhoto($request)
-    {
-
-    }
 }
