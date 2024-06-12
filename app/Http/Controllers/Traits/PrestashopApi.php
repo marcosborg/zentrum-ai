@@ -157,16 +157,18 @@ trait PrestashopApi
 
         $curl = curl_init();
 
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://techniczentrum.com/api/products',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => '<prestashop xmlns:xlink="http://www.w3.org/1999/xlink">
+        curl_setopt_array(
+            $curl,
+            array(
+                CURLOPT_URL => 'https://techniczentrum.com/api/products',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => '<prestashop xmlns:xlink="http://www.w3.org/1999/xlink">
   <product>
     <id_manufacturer>' . $request->id_manufacturer . '</id_manufacturer>
     <id_category_default>' . $request->id_category . '</id_category_default>
@@ -219,11 +221,11 @@ trait PrestashopApi
   </product>
 </prestashop>
 ',
-            CURLOPT_HTTPHEADER => array(
-                'Content-Type: application/xml',
-                'Authorization: Basic SlRVUjNDS0JXN0dWSzFVUUdKNzlSMk5VVU1QWUZNNkI6',
-            ),
-        )
+                CURLOPT_HTTPHEADER => array(
+                    'Content-Type: application/xml',
+                    'Authorization: Basic SlRVUjNDS0JXN0dWSzFVUUdKNzlSMk5VVU1QWUZNNkI6',
+                ),
+            )
         );
 
         $response = curl_exec($curl);
@@ -244,28 +246,60 @@ trait PrestashopApi
     public function savePhoto($request)
     {
 
-        $curl = curl_init();
+        if ($request->hasFile('image') && $request->file('image')->isValid()) {
+            // Obter a instância do arquivo
+            $image = $request->file('image');
 
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://techniczentrum.com/api/images/products/' . $request->product_id,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => array('image' => new \CURLFile($request->file('image')->getPathname())),
-            CURLOPT_HTTPHEADER => array(
-                'Authorization: Basic SlRVUjNDS0JXN0dWSzFVUUdKNzlSMk5VVU1QWUZNNkI6',
-            ),
-        )
-        );
+            // Pega o caminho temporário do arquivo
+            $path = $image->getPathname();
 
-        $response = curl_exec($curl);
+            // Pega o tipo MIME do arquivo
+            $mimeType = $image->getClientMimeType();
 
-        curl_close($curl);
-        return json_decode($response);
+            // Pega o nome original do arquivo
+            $originalName = $image->getClientOriginalName();
+
+            // Exemplo de uso das informações
+            // Você pode imprimir ou usar essas variáveis conforme necessário
+            echo "Path: " . $path;
+            echo "MIME Type: " . $mimeType;
+            echo "Original Name: " . $originalName;
+
+            // Preparar a requisição cURL com essas informações
+            $cfile = new \CURLFile($path, $mimeType, $originalName);
+            $postData = ['image' => $cfile];
+
+            // Inicializa o cURL
+            $ch = curl_init();
+
+            // Define a URL para onde a imagem será enviada
+            $url = 'https://techniczentrum.com/api/images/products/' . $request->product_id; // Substitua pela URL real
+
+            // Configura as opções do cURL
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            // Executa a solicitação cURL
+            $response = curl_exec($ch);
+
+            // Verifica se houve algum erro
+            if (curl_errno($ch)) {
+                $error_msg = 'cURL error: ' . curl_error($ch);
+                curl_close($ch);
+                return response()->json(['error' => $error_msg], 500);
+            }
+
+            // Fecha a sessão cURL
+            curl_close($ch);
+
+            // Retorna a resposta do servidor
+            return response()->json(['response' => $response]);
+        } else {
+            return response()->json(['error' => 'File upload error.'], 400);
+        }
+
 
     }
 }
