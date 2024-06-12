@@ -242,6 +242,51 @@ class AuthController extends Controller
 
     public function uploadImage(Request $request)
     {
-        return $this->savePhoto($request);
+        // Verifica se a imagem foi enviada
+        if ($request->hasFile('image') && $request->file('image')->isValid()) {
+            // Obter a imagem enviada
+            $image = $request->file('image');
+
+            // Pega o caminho temporário do arquivo
+            $path = $image->getPathname();
+            $mimeType = $image->getClientMimeType();
+            $originalName = $image->getClientOriginalName();
+
+            // Configuração cURL
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => 'https://techniczentrum.com/api/images/products/16698',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => array('image' => new \CURLFile($path, $mimeType, $originalName)),
+                CURLOPT_HTTPHEADER => array(
+                    'Authorization: Basic SlRVUjNDS0JXN0dWSzFVUUdKNzlSMk5VVU1QWUZNNkI6',
+                    'Cookie: ajs_anonymous_id=52a7cc18-c97f-4830-bb7b-3fef5cb995fa; PrestaShop-62a59363e2faaea29b9143c352cdda5c=def50200d9837ad7bb0e365403b4d93fa35f17166bf0cca528dab69f58214185f3dd9092ca125ba7df1c2bb66f76575ea9c9eb91a47e6921cd9d037b28edb0ffe8a3d63fa5948381c5740c5fe7f4c9122d4a4afaf3573cb576be86f9094996600dd1b42312b0c4fee7437c42fe90b4e26d74f3c2a72e16a58bb1eb0165a1c4c7dab28d4465288cacf19bb838afede57ae9a0f9a6c24619b53e72ad6a02a5be1ffb7fed3197c9b39a64b926d2ae1b5c30fab7766faeafabc58d1a2f0424c9a5327d8d107bb8d3b578ab0cdb5acbcb3777ef387a3cb75e814f80'
+                ),
+            )
+            );
+
+            $response = curl_exec($curl);
+
+            // Verifica se houve algum erro
+            if (curl_errno($curl)) {
+                $error_msg = 'cURL error: ' . curl_error($curl);
+                curl_close($curl);
+                return response()->json(['error' => $error_msg], 500);
+            }
+
+            curl_close($curl);
+
+            // Retorna a resposta do servidor
+            return response()->json(['response' => $response], 200);
+        } else {
+            return response()->json(['error' => 'Imagem não enviada ou inválida.'], 400);
+        }
     }
 }
