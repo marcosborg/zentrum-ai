@@ -242,10 +242,14 @@ class AuthController extends Controller
 
     public function uploadImage(Request $request)
     {
-        // Verifica se a imagem e o product_id estão presentes
         if ($request->hasFile('image') && $request->has('product_id')) {
-            return $request->file('image')->getPathname();
-            //return $this->savePhoto($request);
+            $image = $request->file('image');
+    
+            // Lê o conteúdo do arquivo
+            $fileContents = file_get_contents($image->getPathname());
+    
+            // Retorna a imagem com o cabeçalho correto
+            return response($fileContents, 200)->header('Content-Type', $image->getClientMimeType());
         } else {
             return response()->json(['error' => 'Faltam parâmetros obrigatórios.'], 400);
         }
