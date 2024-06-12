@@ -256,7 +256,7 @@ class AuthController extends Controller
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
-                CURLOPT_URL => 'https://techniczentrum.com/api/images/products/16698',
+                CURLOPT_URL => 'https://techniczentrum.com/api/images/products/' . $request->product_id,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
                 CURLOPT_MAXREDIRS => 10,
