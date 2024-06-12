@@ -74,7 +74,8 @@ class AuthController extends Controller
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'GET',
-        ));
+        )
+        );
 
         $response = curl_exec($curl);
 
@@ -219,5 +220,26 @@ class AuthController extends Controller
     public function prestashopManufacturers()
     {
         return $this->manufacturers();
+    }
+
+    public function prestashopCategory($category_id)
+    {
+        return $this->category($category_id);
+    }
+
+    public function prestashopManufacturer($manufacturer_id)
+    {
+        return $this->manufacturer($manufacturer_id);
+    }
+
+    public function createProduct(Request $request)
+    {
+        return $this->newProduct($request);
+
+    }
+
+    public function uploadImage(Request $request)
+    {
+        return $request;
     }
 }

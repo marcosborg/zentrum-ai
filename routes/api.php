@@ -13,5 +13,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('update-state/{form_data_id}', 'Api\\AuthController@updateState');
     Route::get('prestashop-categories', 'Api\\AuthController@prestashopCategories');
     Route::get('prestashop-manufacturers', 'Api\\AuthController@prestashopManufacturers');
+    Route::get('prestashop-category/{ctegory_id}', 'Api\\AuthController@prestashopCategory');
+    Route::get('prestashop-manufacturer/{manufacturer_id}', 'Api\\AuthController@prestashopManufacturer');
+    Route::post('create-product', 'Api\\AuthController@createProduct');
+    Route::post('upload-image', 'Api\\AuthController@uploadImage');
 
 });
