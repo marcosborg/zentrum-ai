@@ -244,7 +244,8 @@ class AuthController extends Controller
     {
         // Verifica se a imagem e o product_id estão presentes
         if ($request->hasFile('image') && $request->has('product_id')) {
-            return $this->savePhoto($request);
+            return $request->file('image')->getPathname();
+            //return $this->savePhoto($request);
         } else {
             return response()->json(['error' => 'Faltam parâmetros obrigatórios.'], 400);
         }

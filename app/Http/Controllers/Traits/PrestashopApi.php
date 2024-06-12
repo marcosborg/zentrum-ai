@@ -255,7 +255,7 @@ trait PrestashopApi
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => array('image' => new \CURLFile($request->image->getUrl())),
+            CURLOPT_POSTFIELDS => array('image' => new \CURLFile($request->file('image')->getPathname())),
             CURLOPT_HTTPHEADER => array(
                 'Authorization: Basic SlRVUjNDS0JXN0dWSzFVUUdKNzlSMk5VVU1QWUZNNkI6',
             ),
