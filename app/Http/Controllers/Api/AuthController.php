@@ -118,18 +118,20 @@ class AuthController extends Controller
     public function isValidReference($item)
     {
 
-        return true;
-
         // Verificar se o item tem mais de 5 caracteres e menos de 14 caracteres
         $length = strlen($item);
-        if ($length <= 5 || $length >= 14) {
+        if ($length <= 4 || $length >= 30) {
             return false;
         }
+
+        /*
 
         // Verificar se o item contém apenas letras e números
         if (preg_match('/[^A-Za-z0-9]/', $item)) {
             return false;
         }
+
+        */
 
         return true;
     }
