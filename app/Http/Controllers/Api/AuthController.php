@@ -117,6 +117,9 @@ class AuthController extends Controller
     // Função para determinar se um item é uma referência válida
     public function isValidReference($item)
     {
+
+        return true;
+
         // Verificar se o item tem mais de 5 caracteres e menos de 14 caracteres
         $length = strlen($item);
         if ($length <= 5 || $length >= 14) {
