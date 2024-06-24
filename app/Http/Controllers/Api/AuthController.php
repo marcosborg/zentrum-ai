@@ -176,18 +176,24 @@ class AuthController extends Controller
         return $user;
     }
 
-    public function formDatas()
+    public function formDatas($done, $page)
     {
+
+        $perPage = 15;
+
+        // Obtém os dados paginados
         $form_datas = FormData::where([
             'form_id' => 3,
-            'done' => false,
-        ])->orderBy('created_at', 'desc')->get();
-        $convertedFormDatas = $form_datas->map(function ($form_data) {
+            'done' => $done,
+        ])->orderBy('created_at', 'desc')->paginate($perPage, ['*'], 'page', $page);
+
+        // Itera sobre cada item da página para decodificar os dados JSON
+        $form_datas->getCollection()->transform(function ($form_data) {
             $form_data->data = json_decode($form_data->data, true);
             return $form_data;
         });
 
-        return $convertedFormDatas;
+        return $form_datas;
     }
 
     public function formData($form_data_id)
@@ -260,20 +266,22 @@ class AuthController extends Controller
             // Configuração cURL
             $curl = curl_init();
 
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => 'https://techniczentrum.com/api/images/products/' . $request->product_id,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => 'POST',
-                CURLOPT_POSTFIELDS => array('image' => new \CURLFile($path, $mimeType, $originalName)),
-                CURLOPT_HTTPHEADER => array(
-                    'Authorization: Basic SlRVUjNDS0JXN0dWSzFVUUdKNzlSMk5VVU1QWUZNNkI6',
-                ),
-            )
+            curl_setopt_array(
+                $curl,
+                array(
+                    CURLOPT_URL => 'https://techniczentrum.com/api/images/products/' . $request->product_id,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS => array('image' => new \CURLFile($path, $mimeType, $originalName)),
+                    CURLOPT_HTTPHEADER => array(
+                        'Authorization: Basic SlRVUjNDS0JXN0dWSzFVUUdKNzlSMk5VVU1QWUZNNkI6',
+                    ),
+                )
             );
 
             $response = curl_exec($curl);
