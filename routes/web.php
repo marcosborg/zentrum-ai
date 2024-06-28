@@ -117,12 +117,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
         Route::get('/{form_data_id}', 'FormsInboxController@form')->name('forms-inboxes.form');
     });
 
-    // Part
-    Route::delete('parts/destroy', 'PartController@massDestroy')->name('parts.massDestroy');
-    Route::post('parts/media', 'PartController@storeMedia')->name('parts.storeMedia');
-    Route::post('parts/ckmedia', 'PartController@storeCKEditorImages')->name('parts.storeCKEditorImages');
-    Route::resource('parts', 'PartController');
-
 });
 
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {

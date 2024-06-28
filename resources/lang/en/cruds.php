@@ -275,27 +275,5 @@ return [
         'title'          => 'Logistics',
         'title_singular' => 'Logistic',
     ],
-    'part' => [
-        'title'          => 'Part',
-        'title_singular' => 'Part',
-        'fields'         => [
-            'id'                => 'ID',
-            'id_helper'         => ' ',
-            'data'              => 'Data',
-            'data_helper'       => ' ',
-            'created_at'        => 'Created at',
-            'created_at_helper' => ' ',
-            'updated_at'        => 'Updated at',
-            'updated_at_helper' => ' ',
-            'deleted_at'        => 'Deleted at',
-            'deleted_at_helper' => ' ',
-            'photo'             => 'Photo',
-            'photo_helper'      => ' ',
-            'exist'               => 'Exist',
-            'exist_helper'        => ' ',
-            'product_info'        => 'Product Info',
-            'product_info_helper' => ' ',
-        ],
-    ],
 
 ];
