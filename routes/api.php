@@ -18,4 +18,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('create-product', 'Api\\AuthController@createProduct');
     Route::post('upload-image', 'Api\\AuthController@uploadImage');
 
+    Route::prefix('zcm/orders')->group(function () {
+        Route::get('categories', 'ZcmController@categories');
+    });
+
 });
