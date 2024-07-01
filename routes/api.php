@@ -21,6 +21,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::prefix('zcm/orders')->group(function () {
         Route::get('categories', 'ZcmController@categories');
+        Route::get('sub-categories/{phase_id}', 'ZcmController@subCategories');
+        Route::post('zcm-update-state', 'ZcmController@zcmUpdateState');
     });
 
 });

@@ -178,7 +178,7 @@ trait PrestashopApi
     <reference>' . $request->reference . '</reference>
     <state>1</state>
     <price>' . $request->price . '</price>
-    <active>1</active>
+    <active>0</active>
     <show_price>1</show_price>
     <visibility>both</visibility>
     <meta_description>
@@ -242,4 +242,5 @@ trait PrestashopApi
         return response()->json(['id' => $id], 200);
 
     }
+    
 }
