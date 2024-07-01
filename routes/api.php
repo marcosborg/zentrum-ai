@@ -17,6 +17,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('prestashop-manufacturer/{manufacturer_id}', 'Api\\AuthController@prestashopManufacturer');
     Route::post('create-product', 'Api\\AuthController@createProduct');
     Route::post('upload-image', 'Api\\AuthController@uploadImage');
+    Route::post('search-form-datas', 'Api\\AuthController@searchFormDatas');
 
     Route::prefix('zcm/orders')->group(function () {
         Route::get('categories', 'ZcmController@categories');

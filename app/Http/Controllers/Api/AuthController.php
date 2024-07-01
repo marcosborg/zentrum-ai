@@ -301,4 +301,18 @@ class AuthController extends Controller
             return response()->json(['error' => 'Imagem não enviada ou inválida.'], 400);
         }
     }
+
+    public function searchFormDatas(Request $request)
+    {
+        $search = $request->search;
+
+        $form_datas = FormData::where('done', $request->done)->where('data', 'like', '%' . $search . '%')
+            ->get()
+            ->map(function ($form_data) {
+                $form_data->data = json_decode($form_data->data, true);
+                return $form_data;
+            });
+
+        return $form_datas;
+    }
 }
