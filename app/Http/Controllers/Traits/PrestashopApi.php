@@ -242,5 +242,41 @@ trait PrestashopApi
         return response()->json(['id' => $id], 200);
 
     }
+
+    public function product($prestashop_id)
+    {
+
+        $curl = curl_init();
+
+        curl_setopt_array(
+            $curl,
+            array(
+                CURLOPT_URL => 'https://techniczentrum.com/api/products/' . $prestashop_id . '?output_format=JSON&display=full',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'GET',
+                CURLOPT_HTTPHEADER => array(
+                    'Authorization: Basic SlRVUjNDS0JXN0dWSzFVUUdKNzlSMk5VVU1QWUZNNkI6',
+                ),
+            )
+        );
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        return json_decode($response);
+
+    }
+
+    public function updateStock($request)
+    {
+
+    }
+
     
+
 }

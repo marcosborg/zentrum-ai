@@ -75,25 +75,27 @@ trait Iftech
 
         $curl = curl_init();
 
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://zcmanager.com/api/orders/categories',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'GET',
-            CURLOPT_HTTPHEADER => array(
-                'Authorization: Bearer ' . $access_token
-            ),
-        )
+        curl_setopt_array(
+            $curl,
+            array(
+                CURLOPT_URL => 'https://zcmanager.com/api/orders/categories',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'GET',
+                CURLOPT_HTTPHEADER => array(
+                    'Authorization: Bearer ' . $access_token
+                ),
+            )
         );
 
         $response = curl_exec($curl);
 
         curl_close($curl);
-        
+
         return json_decode($response);
 
     }
@@ -103,19 +105,22 @@ trait Iftech
 
         $curl = curl_init();
 
-        curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://zcmanager.com/api/orders/categories/' . $phase_id . '/subCategories',
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'GET',
-        CURLOPT_HTTPHEADER => array(
-            'Authorization: Bearer ' . $access_token
-        ),
-        ));
+        curl_setopt_array(
+            $curl,
+            array(
+                CURLOPT_URL => 'https://zcmanager.com/api/orders/categories/' . $phase_id . '/subCategories',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'GET',
+                CURLOPT_HTTPHEADER => array(
+                    'Authorization: Bearer ' . $access_token
+                ),
+            )
+        );
 
         $response = curl_exec($curl);
 
@@ -129,32 +134,115 @@ trait Iftech
 
         $curl = curl_init();
 
-        curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://zcmanager.com/api/orders/followup',
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_POSTFIELDS =>'{
+        curl_setopt_array(
+            $curl,
+            array(
+                CURLOPT_URL => 'https://zcmanager.com/api/orders/followup',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => '{
             "id": "' . $id . '",
             "phase_id": "' . $phase_id . '",
             "status_id": "' . $status_id . '",
             "obs": "' . $obs . '"
         }',
-        CURLOPT_HTTPHEADER => array(
-            'Content-Type: application/json',
-            'Authorization: Bearer ' . $access_token
-        ),
-        ));
+                CURLOPT_HTTPHEADER => array(
+                    'Content-Type: application/json',
+                    'Authorization: Bearer ' . $access_token
+                ),
+            )
+        );
 
         $response = curl_exec($curl);
 
         curl_close($curl);
-        
+
         return json_decode($response, true);
+
+    }
+
+    public function checkStock($access_token, $prestashop_id)
+    {
+
+        $curl = curl_init();
+
+        curl_setopt_array(
+            $curl,
+            array(
+                CURLOPT_URL => 'https://zcmanager.com/api/products/stocks/prestashop/' . $prestashop_id,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'GET',
+                CURLOPT_HTTPHEADER => array(
+                    'Authorization: Bearer ' . $access_token
+                ),
+            )
+        );
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        return json_decode($response);
+
+    }
+
+    public function createStock($access_token, $request)
+    {
+
+        $curl = curl_init();
+
+        curl_setopt_array(
+            $curl,
+            array(
+                CURLOPT_URL => 'https://zcmanager.com/api/products/stocks',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => '{
+                    "id_product": "' . $request->prestashop_id . '",
+                    "category": "' . $request->category . '",
+                    "brand_reference": "' . $request->brand_reference . '",
+                    "name": "' . $request->name . '",
+                    "manufacturer": "' . $request->manufacturer . '",
+                    "manufacturer_reference": "' . $request->manufacturer_reference . '",
+                    "other_references": "' . $request->other_references . '",
+                    "car_model": "' . $request->car_model . '",
+                    "stock": "' . $request->stock . '",
+                    "stock_location": "' . $request->stock_location . '",
+                    "observations": "' . $request->observations . '",
+                    "email": "' . $request->email . '",
+                    "price": "' . $request->price . '"
+                }',
+                CURLOPT_HTTPHEADER => array(
+                    'Content-Type: application/json',
+                    'Authorization: Bearer ' . $access_token
+                ),
+            )
+        );
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        return json_decode($response);
+
+    }
+
+    public function updateStock($access_token, $request)
+    {
 
     }
 
