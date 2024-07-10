@@ -26,6 +26,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('check-zcm-stock/{prestashop_id}', 'ZcmController@checkZcmStock');
         Route::get('prestashop-product/{prestashop_id}', 'ZcmController@prestashopProduct');
         Route::post('prestashop-create-stock', 'ZcmController@prestashopCreateStock');
+        Route::post('prestashop-update-stock', 'ZcmController@prestashopUpdateStock');
     });
 
 });

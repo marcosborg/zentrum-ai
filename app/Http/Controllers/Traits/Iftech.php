@@ -243,6 +243,45 @@ trait Iftech
 
     public function updateStock($access_token, $request)
     {
+        $curl = curl_init();
+
+        curl_setopt_array(
+            $curl,
+            array(
+                CURLOPT_URL => 'https://zcmanager.com/api/products/stocks/' . $request->stock_id,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'PUT',
+                CURLOPT_POSTFIELDS => '{
+                    "id_product": "' . $request->prestashop_id . '",
+                    "category": "' . $request->category . '",
+                    "brand_reference": "' . $request->brand_reference . '",
+                    "name": "' . $request->name . '",
+                    "manufacturer": "' . $request->manufacturer . '",
+                    "manufacturer_reference": "' . $request->manufacturer_reference . '",
+                    "other_references": "' . $request->other_references . '",
+                    "car_model": "' . $request->car_model . '",
+                    "stock": "' . $request->stock . '",
+                    "stock_location": "' . $request->stock_location . '",
+                    "observations": "' . $request->observations . '",
+                    "email": "' . $request->email . '",
+                    "price": "' . $request->price . '"
+        }',
+                CURLOPT_HTTPHEADER => array(
+                    'Content-Type: application/json',
+                    'Authorization: Bearer ' . $access_token
+                ),
+            )
+        );
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        return json_decode($response);
 
     }
 

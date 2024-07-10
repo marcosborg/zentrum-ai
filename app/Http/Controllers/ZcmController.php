@@ -60,4 +60,10 @@ class ZcmController extends Controller
         $access_token = $this->login()['access_token'];
         return $this->createStock($access_token, $request);
     }
+
+    public function prestashopUpdateStock(Request $request)
+    {
+        $access_token = $this->login()['access_token'];
+        return $this->updateStock($access_token, $request);
+    }
 }
