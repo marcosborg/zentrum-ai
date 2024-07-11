@@ -270,13 +270,6 @@ trait PrestashopApi
         curl_close($curl);
         return json_decode($response);
 
-    }
-
-    public function updateStock($request)
-    {
-
-    }
-
-    
+    }    
 
 }

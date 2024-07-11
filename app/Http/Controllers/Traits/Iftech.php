@@ -6,8 +6,8 @@ trait Iftech
 {
     public function login()
     {
-        $login = env('IFTECH_LOGIN');
-        $password = env('IFTECH_PASSWORD');
+        $login = 'marcosborges@netlook.pt';
+        $password = 'n8YcwcUT';
 
         $curl = curl_init();
 
