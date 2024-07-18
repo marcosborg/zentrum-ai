@@ -129,7 +129,7 @@ trait Iftech
 
     }
 
-    public function followup($access_token, $id, $phase_id, $status_id, $obs)
+    public function followup($access_token, $id, $phase_id, $status_id, $obs, $email)
     {
 
         $curl = curl_init();
@@ -138,7 +138,8 @@ trait Iftech
             "id" => $id,
             "phase_id" => $phase_id,
             "status_id" => $status_id,
-            "obs" => $obs
+            "obs" => $obs,
+            "email" => $email
         );
     
         $jsonData = json_encode($data);

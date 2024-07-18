@@ -35,7 +35,7 @@ class ZcmController extends Controller
     {
         $access_token = $this->login()['access_token'];
 
-        return $this->followup($access_token, $request->id, $request->phase_id, $request->status_id, $request->obs);
+        return $this->followup($access_token, $request->id, $request->phase_id, $request->status_id, $request->obs, $request->email);
     }
 
     public function checkZcmStock($prestashop_id)
