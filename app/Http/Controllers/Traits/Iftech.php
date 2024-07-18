@@ -134,6 +134,15 @@ trait Iftech
 
         $curl = curl_init();
 
+        $data = array(
+            "id" => $id,
+            "phase_id" => $phase_id,
+            "status_id" => $status_id,
+            "obs" => $obs
+        );
+    
+        $jsonData = json_encode($data);
+
         curl_setopt_array(
             $curl,
             array(
@@ -145,12 +154,7 @@ trait Iftech
                 CURLOPT_FOLLOWLOCATION => true,
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST => 'POST',
-                CURLOPT_POSTFIELDS => '{
-            "id": "' . $id . '",
-            "phase_id": "' . $phase_id . '",
-            "status_id": "' . $status_id . '",
-            "obs": "' . $obs . '"
-        }',
+                CURLOPT_POSTFIELDS => $jsonData,
                 CURLOPT_HTTPHEADER => array(
                     'Content-Type: application/json',
                     'Authorization: Bearer ' . $access_token
