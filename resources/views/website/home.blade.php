@@ -124,8 +124,9 @@
         $(() => {
             setTimeout(() => {
                 checkIfThreadInSession().then((resp) => {
-                    if (resp) {
+                    if (resp !== 'undefined') {
                         thread_id = resp;
+                        console.log(thread_id);
                         checkIfLogInSession().then((resp) => {
                             if (resp) {
                                 log_id = resp;
@@ -192,6 +193,7 @@
                     });
                 } else {
                     addMessage(thread_id, message).then((resp) => {
+                        console.log(resp);
                         runTheThread(thread_id).then((resp) => {
                             let run_id = resp.id;
                             let interval = setInterval(() => {
@@ -339,10 +341,11 @@
         getMessages = async (thread_id) => {
             return $.get('/chat/get-messages/' + thread_id);
         }
-        createThreadAndRun = async () => {
+        createThreadAndRun = async (message) => {
             try {
                 let data = {
-                    assistant_id: assistant_id
+                    assistant_id: assistant_id,
+                    message: message
                 };
                 return new Promise((resolve, reject) => {
                     $.post({

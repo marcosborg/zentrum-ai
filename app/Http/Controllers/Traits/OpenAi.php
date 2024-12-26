@@ -18,7 +18,7 @@ trait OpenAi
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
             'Authorization: Bearer ' . $openaiApiKey,
-            'OpenAI-Beta: assistants=v1'
+            'OpenAI-Beta: assistants=v2'
         ]);
 
         $response = curl_exec($ch);
@@ -54,7 +54,7 @@ trait OpenAi
         }',
             CURLOPT_HTTPHEADER => array(
                 'Content-Type: application/json',
-                'OpenAI-Beta: assistants=v1',
+                'OpenAI-Beta: assistants=v2',
                 'Authorization: Bearer ' . $openaiApiKey
             ),
         ));
@@ -83,7 +83,7 @@ trait OpenAi
             CURLOPT_CUSTOMREQUEST => 'GET',
             CURLOPT_HTTPHEADER => array(
                 'Content-Type: application/json',
-                'OpenAI-Beta: assistants=v1',
+                'OpenAI-Beta: assistants=v2',
                 'Authorization: Bearer ' . $openaiApiKey
             ),
         ));
@@ -111,7 +111,7 @@ trait OpenAi
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'GET',
             CURLOPT_HTTPHEADER => array(
-                'OpenAI-Beta: assistants=v1',
+                'OpenAI-Beta: assistants=v2',
                 'Authorization: Bearer ' . $openaiApiKey
             ),
         ));
@@ -140,7 +140,7 @@ trait OpenAi
             CURLOPT_CUSTOMREQUEST => 'GET',
             CURLOPT_HTTPHEADER => array(
                 'Content-Type: application/json',
-                'OpenAI-Beta: assistants=v1',
+                'OpenAI-Beta: assistants=v2',
                 'Authorization: Bearer ' . $openaiApiKey
             ),
         ));
@@ -173,7 +173,7 @@ trait OpenAi
             }',
             CURLOPT_HTTPHEADER => array(
                 'Content-Type: application/json',
-                'OpenAI-Beta: assistants=v1',
+                'OpenAI-Beta: assistants=v2',
                 'Authorization: Bearer ' . $openaiApiKey
             ),
         ));
@@ -203,7 +203,7 @@ trait OpenAi
             CURLOPT_POSTFIELDS => '{"assistant_id": "' . $assist_code . '"}',
             CURLOPT_HTTPHEADER => array(
                 'Content-Type: application/json',
-                'OpenAI-Beta: assistants=v1',
+                'OpenAI-Beta: assistants=v2',
                 'Authorization: Bearer ' . $openaiApiKey,
             ),
         ));
@@ -244,7 +244,7 @@ trait OpenAi
             CURLOPT_POSTFIELDS => $data,
             CURLOPT_HTTPHEADER => array(
                 'Content-Type: application/json',
-                'OpenAI-Beta: assistants=v1',
+                'OpenAI-Beta: assistants=v2',
                 'Authorization: Bearer ' . $openaiApiKey
             ),
         ));
