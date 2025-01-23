@@ -176,11 +176,12 @@ trait PrestashopApi
     <type>simple</type>
     <id_shop_default>1</id_shop_default>
     <reference>' . $request->reference . '</reference>
+    <mpn>' . $request->reference . '</mpn>
+    <condition>used</condition>
     <state>1</state>
     <price>' . $request->price . '</price>
     <active>0</active>
     <show_price>1</show_price>
-    <visibility>both</visibility>
     <meta_description>
       <language id="1">' . $request->name[0] . '</language>
       <language id="3">' . $request->name[1] . '</language>
