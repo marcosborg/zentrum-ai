@@ -117,6 +117,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
         Route::get('/{form_data_id}', 'FormsInboxController@form')->name('forms-inboxes.form');
     });
 
+    // Zcm
+    Route::prefix('zcms')->group(function() {
+        Route::get('/', 'ZcmController@index')->name('zcms.index');
+        Route::post('orders', 'ZcmController@orders');
+    });
+
 });
 
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {

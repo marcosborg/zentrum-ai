@@ -275,5 +275,9 @@ return [
         'title'          => 'Logistics',
         'title_singular' => 'Logistic',
     ],
+    'zcm' => [
+        'title'          => 'Zcm',
+        'title_singular' => 'Zcm',
+    ],
 
 ];

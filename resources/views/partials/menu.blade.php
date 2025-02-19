@@ -209,6 +209,16 @@
                         </li>
                     @endcan
                 </ul>
+                @can('zcm_access')
+                        <li class="c-sidebar-nav-item">
+                            <a href="{{ route("admin.zcms.index") }}" class="c-sidebar-nav-link {{ request()->is("admin/zcms") || request()->is("admin/zcms/*") ? "c-active" : "" }}">
+                                <i class="fa-fw fas fa-comments c-sidebar-nav-icon">
+
+                                </i>
+                                {{ trans('cruds.zcm.title') }}
+                            </a>
+                        </li>
+                    @endcan
             </li>
         @endcan
         @if(file_exists(app_path('Http/Controllers/Auth/ChangePasswordController.php')))

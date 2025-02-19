@@ -37,7 +37,6 @@ trait Iftech
         curl_close($curl);
 
         return json_decode($response, true);
-
     }
 
     public function sendForm($access_token, $data)
@@ -67,7 +66,6 @@ trait Iftech
         $response = curl_exec($curl);
 
         curl_close($curl);
-
     }
 
     public function zcmCategories($access_token)
@@ -97,7 +95,6 @@ trait Iftech
         curl_close($curl);
 
         return json_decode($response);
-
     }
 
     public function zcmSubCategories($access_token, $phase_id)
@@ -126,7 +123,6 @@ trait Iftech
 
         curl_close($curl);
         return json_decode($response, true);
-
     }
 
     public function followup($access_token, $id, $phase_id, $status_id, $obs, $email)
@@ -141,7 +137,7 @@ trait Iftech
             "obs" => $obs,
             "email" => $email
         );
-    
+
         $jsonData = json_encode($data);
 
         curl_setopt_array(
@@ -168,7 +164,6 @@ trait Iftech
         curl_close($curl);
 
         return json_decode($response, true);
-
     }
 
     public function checkStock($access_token, $prestashop_id)
@@ -198,7 +193,6 @@ trait Iftech
         curl_close($curl);
 
         return json_decode($response);
-
     }
 
     public function createStock($access_token, $request)
@@ -243,7 +237,6 @@ trait Iftech
 
         curl_close($curl);
         return json_decode($response);
-
     }
 
     public function updateStock($access_token, $request)
@@ -287,7 +280,31 @@ trait Iftech
 
         curl_close($curl);
         return json_decode($response);
-
     }
 
+    public function zcmOrders($access_token, $start_date, $end_date)
+    {
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://zcmanager.com/api/orders/date',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => array('start_date' => $start_date, 'end_date' => $end_date),
+            CURLOPT_HTTPHEADER => array(
+                'Authorization: Bearer ' . $access_token
+            ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        return json_decode($response, true);
+    }
 }
