@@ -33,13 +33,13 @@ class ZcmController extends Controller
                 'salesman' => $order['user']['name'],
                 'calltype' => $order['call_type']['name'],
                 'status' => $order['status']['name'],
-                'car' => $order['requestlines'] ? ($order['requestlines']['car']['brand'] . ' ' . $order['requestlines']['car']['brand']) : '',
-                'product' => $order['requestlines']['product']['name'],
-                'request' => $order['requestlines']['obs'],
+                'car' => ($order['requestlines'] ? $order['requestlines']['car']['brand'] ?? '' : '') . ' ' . ($order['requestlines'] ? $order['requestlines']['car']['brand'] ?? '' : ''),
+                'product' => $order['requestlines']['product']['name'] ?? '',
+                'request' => $order['requestlines']['obs'] ?? '',
                 'declined' => $order['declined'] ? $order['declined']['desc'] : '',
             ];
         }
 
-        return $newArray;
+        return view('admin.zcms.ajax', compact('newArray'));
     }
 }

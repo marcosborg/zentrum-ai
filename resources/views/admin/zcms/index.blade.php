@@ -34,10 +34,31 @@
     </div>
 </div>
 
+<div class="card">
+    <div class="card-header">
+        Resultados
+    </div>
+
+    <div class="card-body" id="orders_result">
+    </div>
+</div>
 
 @endsection
 @section('scripts')
 <script>
-
+    $('#zcm_orders').ajaxForm({
+        beforeSubmit: () => {
+            $.LoadingOverlay('show');
+        },
+        success: (resp) => {
+            $.LoadingOverlay('hide');
+            $('#orders_result').html(resp);
+            console.log(resp);
+        },
+        error: (err) => {
+            $.LoadingOverlay('hide');
+            console.log(err);
+        }
+    });
 </script>
 @endsection
