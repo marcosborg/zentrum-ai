@@ -30,9 +30,24 @@ trait OpenAi
     public function createThreadAndRun($openaiApiKey, $assistant_code, $message)
     {
 
+        $payload = [
+            "assistant_id" => $assistant_code,
+            "thread" => [
+                "messages" => [
+                    [
+                        "role" => "user",
+                        "content" => $message
+                    ]
+                ]
+            ]
+        ];
+
+        // ✅ Codificar corretamente o JSON
+        $jsonPayload = json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
         $curl = curl_init();
 
-        curl_setopt_array($curl, array(
+        curl_setopt_array($curl, [
             CURLOPT_URL => 'https://api.openai.com/v1/threads/runs',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
@@ -41,30 +56,19 @@ trait OpenAi
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => '{
-              "assistant_id": "' . $assistant_code . '",
-              "thread": {
-                "messages": [
-                    {
-                      "role": "user", 
-                      "content": "' . $message . '"
-                    }
-                ]
-              }
-        }',
-            CURLOPT_HTTPHEADER => array(
+            CURLOPT_POSTFIELDS => $jsonPayload,
+            CURLOPT_HTTPHEADER => [
                 'Content-Type: application/json',
                 'OpenAI-Beta: assistants=v2',
                 'Authorization: Bearer ' . $openaiApiKey
-            ),
-        ));
+            ],
+        ]);
 
         $response = curl_exec($curl);
 
         curl_close($curl);
 
         return json_decode($response);
-
     }
 
     public function listRunSteps($openaiApiKey, $thread_id, $run_id)
@@ -93,7 +97,6 @@ trait OpenAi
         curl_close($curl);
 
         return json_decode($response);
-
     }
 
     public function retrieveRun($openaiApiKey, $thread_id, $run_id)
@@ -121,7 +124,6 @@ trait OpenAi
         curl_close($curl);
 
         return json_decode($response);
-
     }
 
     public function listMessages($openaiApiKey, $thread_id)
@@ -150,7 +152,6 @@ trait OpenAi
         curl_close($curl);
 
         return json_decode($response);
-
     }
 
     public function createMessage($openaiApiKey, $thread_id, $message)
@@ -183,7 +184,6 @@ trait OpenAi
         curl_close($curl);
 
         return json_decode($response);
-
     }
 
     public function createRun($openaiApiKey, $assist_code, $thread_id)
@@ -213,7 +213,6 @@ trait OpenAi
         curl_close($curl);
 
         return json_decode($response);
-
     }
 
     public function submitToolOutputsToRun($openaiApiKey, $thread_id, $run_id, $tool_call_id, $output)
@@ -254,7 +253,5 @@ trait OpenAi
         curl_close($curl);
 
         return json_decode($response);
-
     }
-
 }

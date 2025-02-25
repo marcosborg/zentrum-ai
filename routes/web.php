@@ -121,6 +121,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::prefix('zcms')->group(function() {
         Route::get('/', 'ZcmController@index')->name('zcms.index');
         Route::post('orders', 'ZcmController@orders');
+        Route::post('create-run', 'ZcmController@createRun');
+        Route::post('ai-chat', 'ZcmController@aiChat');
     });
 
 });
