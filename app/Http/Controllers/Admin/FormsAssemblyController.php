@@ -151,6 +151,9 @@ class FormsAssemblyController extends Controller
 
     public function formSend(Request $request)
     {
+
+        return $request;
+
         $form_data = new FormData;
         $form_data->form_id = $request->form_id;
         $form_data->data = json_encode($request->data);

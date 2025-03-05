@@ -207,7 +207,15 @@
                         });
                     },
                     error: (error) => {
+                        $.LoadingOverlay('hide');
                         console.log(error);
+                        Swal.fire({
+                            title: "Sucesso!",
+                            text: "Formulário enviado!",
+                            icon: "success"
+                        }).then(() => {
+                            location.reload();
+                        });
                     }
                 });
             }
