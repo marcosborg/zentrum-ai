@@ -6,46 +6,30 @@ trait Iftech
 {
     public function login()
     {
-        $login = 'marcosborges@netlook.pt';
-        $password = 'jO8casLBe3aRDhw';
-
         $curl = curl_init();
 
-        curl_setopt_array(
-            $curl,
-            array(
-                CURLOPT_URL => 'https://zcmanager.com/api/auth/login2',
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => 'POST',
-                CURLOPT_POSTFIELDS => '{
-                    "email": "' . $login . '",
-                    "password": "' . $password . '"
-                }',
-                CURLOPT_HTTPHEADER => array(
-                    'Content-Type: application/json'
-                ),
-            )
-        );
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://zcmanager.com/api/auth/login2',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => array('email' => 'marcosborges@netlook.pt', 'password' => 'jO8casLBe3aRDhw'),
+        ));
 
         $response = curl_exec($curl);
 
         curl_close($curl);
 
-        return json_decode($response, true);
+        return $response;
+
     }
 
     public function sendForm($access_token, $data)
     {
-
-        return [
-            'access_token' => $access_token,
-            'data' => $data
-        ];
 
         $curl = curl_init();
 
@@ -71,6 +55,8 @@ trait Iftech
         $response = curl_exec($curl);
 
         curl_close($curl);
+
+        return json_decode($response, true);
     }
 
     public function zcmCategories($access_token)
