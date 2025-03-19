@@ -14,9 +14,9 @@ class ZcmController extends Controller
     public function categories()
     {
 
-        $access_token = $this->login()['access_token'];
+        //$access_token = $this->login();
 
-        $categories = $this->zcmCategories($access_token);
+        $categories = $this->zcmCategories();
 
         return $categories;
     }

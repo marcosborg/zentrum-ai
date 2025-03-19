@@ -59,7 +59,7 @@ trait Iftech
         return json_decode($response, true);
     }
 
-    public function zcmCategories($access_token)
+    public function zcmCategories()
     {
 
         $curl = curl_init();
@@ -75,9 +75,6 @@ trait Iftech
                 CURLOPT_FOLLOWLOCATION => true,
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST => 'GET',
-                CURLOPT_HTTPHEADER => array(
-                    'Authorization: Bearer ' . $access_token
-                ),
             )
         );
 
