@@ -24,7 +24,7 @@ class ZcmController extends Controller
     public function subCategories($phase_id)
     {
 
-        $access_token = $this->login()['access_token'];
+        $access_token = $this->login();
 
         $subCategories = $this->zcmSubCategories($access_token, $phase_id);
 
