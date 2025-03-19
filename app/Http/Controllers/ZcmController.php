@@ -33,14 +33,14 @@ class ZcmController extends Controller
 
     public function zcmUpdateState(Request $request)
     {
-        $access_token = $this->login()['access_token'];
+        $access_token = $this->login();
 
         return $this->followup($access_token, $request->id, $request->phase_id, $request->status_id, $request->obs, $request->email);
     }
 
     public function checkZcmStock($prestashop_id)
     {
-        $access_token = $this->login()['access_token'];
+        $access_token = $this->login();
 
         return $this->checkStock($access_token, $prestashop_id);
     }
@@ -57,13 +57,13 @@ class ZcmController extends Controller
 
     public function prestashopCreateStock(Request $request)
     {
-        $access_token = $this->login()['access_token'];
+        $access_token = $this->login();
         return $this->createStock($access_token, $request);
     }
 
     public function prestashopUpdateStock(Request $request)
     {
-        $access_token = $this->login()['access_token'];
+        $access_token = $this->login();
         return $this->updateStock($access_token, $request);
     }
 }
