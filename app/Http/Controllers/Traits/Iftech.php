@@ -7,14 +7,14 @@ trait Iftech
     public function login()
     {
         $login = 'marcosborges@netlook.pt';
-        $password = 'n8YcwcUT';
+        $password = 'jO8casLBe3aRDhw';
 
         $curl = curl_init();
 
         curl_setopt_array(
             $curl,
             array(
-                CURLOPT_URL => 'https://zcmanager.com/api/auth/login',
+                CURLOPT_URL => 'https://zcmanager.com/api/auth/login2',
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
                 CURLOPT_MAXREDIRS => 10,
@@ -41,6 +41,11 @@ trait Iftech
 
     public function sendForm($access_token, $data)
     {
+
+        return [
+            'access_token' => $access_token,
+            'data' => $data
+        ];
 
         $curl = curl_init();
 

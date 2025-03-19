@@ -79,7 +79,7 @@ class FormsController extends Controller
 
         //SEND BY API
 
-        $access_token = $this->login()['access_token'];
+        $access_token = $this->login();
 
         $send_form = $this->sendForm($access_token, $data);
 
