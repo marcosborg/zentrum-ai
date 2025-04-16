@@ -8,6 +8,7 @@ use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Controllers\Traits\OpenAi;
+use App\Models\Company;
 
 class ZcmController extends Controller
 {
@@ -24,8 +25,9 @@ class ZcmController extends Controller
 
     public function orders(Request $request)
     {
-        $access_token =  $this->login()['access_token'];
-        $orders = $this->zcmOrders($access_token, $request->start_date, $request->end_date);
+
+        $access_token =  $this->login();
+        $orders = $this->zcmOrders($access_token, $request->company, $request->start_date, $request->end_date);
         $newArray = [];
         foreach ($orders['orders'] as $order) {
             $newArray[] = [

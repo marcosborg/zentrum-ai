@@ -270,9 +270,8 @@ trait Iftech
         return json_decode($response);
     }
 
-    public function zcmOrders($access_token, $start_date, $end_date)
+    public function zcmOrders($access_token, $company, $start_date, $end_date)
     {
-
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
@@ -284,7 +283,7 @@ trait Iftech
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => array('start_date' => $start_date, 'end_date' => $end_date),
+            CURLOPT_POSTFIELDS => array('company' => $company, 'start_date' => $start_date, 'end_date' => $end_date),
             CURLOPT_HTTPHEADER => array(
                 'Authorization: Bearer ' . $access_token
             ),

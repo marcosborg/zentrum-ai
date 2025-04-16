@@ -3,7 +3,7 @@
 
 <div class="row">
     <!-- Formulário de pedidos -->
-    <div class="col-md-6">
+    <div class="col-md-8">
         <div class="card">
             <div class="card-header">
                 {{ trans('cruds.zcm.title') }}
@@ -13,13 +13,24 @@
                 <form action="/admin/zcms/orders" method="POST" id="zcm_orders">
                     @csrf
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Empresa</label>
+                                <select class="form-control" name="company" id="company" required>
+                                    <option selected disabled>Selecione</option>
+                                    <option value="1">Airbags</option>
+                                    <option value="2">Technic</option>
+                                    <option value="3">Electric</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label>Data de início</label>
                                 <input type="date" class="form-control" name="start_date" id="start_date" required>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label>Data de fim</label>
                                 <input type="date" class="form-control" name="end_date" id="end_date" required>
@@ -35,7 +46,7 @@
     </div>
 
     <!-- Seção do Chat do Assistente AI -->
-    <div class="col-md-6">
+    <div class="col-md-4">
         <div class="card">
             <div class="card-header">
                 Assistente Zentrum AI
