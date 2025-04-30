@@ -11,3 +11,4 @@ class Conversation extends Model
         'messages' => 'array',
     ];
 }
+
