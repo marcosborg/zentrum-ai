@@ -44,4 +44,9 @@ class WebsiteController extends Controller
         return LogMessage::where('log_id', $log_id)->get();
     }
 
+    public function suporteTecnico()
+    {
+        return view('website.zedazentrum');
+    }
+
 }

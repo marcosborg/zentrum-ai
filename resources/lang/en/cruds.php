@@ -279,5 +279,27 @@ return [
         'title'          => 'Zcm',
         'title_singular' => 'Zcm',
     ],
+    'aiTraining' => [
+        'title'          => 'Ai Training',
+        'title_singular' => 'Ai Training',
+    ],
+    'bot' => [
+        'title'          => 'Bot',
+        'title_singular' => 'Bot',
+        'fields'         => [
+            'id'                  => 'ID',
+            'id_helper'           => ' ',
+            'name'                => 'Name',
+            'name_helper'         => ' ',
+            'instructions'        => 'Instructions',
+            'instructions_helper' => ' ',
+            'created_at'          => 'Created at',
+            'created_at_helper'   => ' ',
+            'updated_at'          => 'Updated at',
+            'updated_at_helper'   => ' ',
+            'deleted_at'          => 'Deleted at',
+            'deleted_at_helper'   => ' ',
+        ],
+    ],
 
 ];

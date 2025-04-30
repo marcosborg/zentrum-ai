@@ -125,6 +125,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
         Route::post('ai-chat', 'ZcmController@aiChat');
     });
 
+    // Bot
+    Route::delete('bots/destroy', 'BotController@massDestroy')->name('bots.massDestroy');
+    Route::resource('bots', 'BotController');
+
 });
 
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {
@@ -167,3 +171,7 @@ Route::prefix('form')->group(function () {
 });
 
 Route::get('logistics', 'LogisticsController@index');
+
+Route::prefix('suporte-tecnico')->group(function() {
+    Route::get('/', 'WebsiteController@suporteTecnico')->name('suporte-tecnico');
+});
