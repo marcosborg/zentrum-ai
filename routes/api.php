@@ -32,3 +32,5 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 });
 
 Route::post('/assistant', 'Api\\AIController@handle');
+
+Route::post('/chat', 'Api\\TechnicalAssistanteController@responder');
