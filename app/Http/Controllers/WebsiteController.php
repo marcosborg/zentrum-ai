@@ -46,7 +46,7 @@ class WebsiteController extends Controller
 
     public function suporteTecnico()
     {
-        return view('website.zedazentrum');
+        return view('website.suporte_tecnico');
     }
 
 }
