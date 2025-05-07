@@ -55,12 +55,15 @@ class TechnicalAssistanteController extends Controller
         $messages[] = ['role' => 'user', 'content' => $mensagemUser];
 
         try {
-            $resposta = OpenAI::chat()->create([
+            $client = OpenAI::client(); // isto cria o client real
+
+            $resposta = $client->chat()->create([
                 'model' => 'gpt-4',
                 'messages' => $messages,
                 'temperature' => 0.7,
                 'max_tokens' => 500,
             ]);
+
 
             $respostaTexto = $resposta->choices[0]->message->content;
 
