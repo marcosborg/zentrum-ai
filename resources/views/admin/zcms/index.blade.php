@@ -94,7 +94,7 @@
             thread_id = null;
             let data = $('#zcm_data').data('info');
             $.ajax({
-                url: '/admin/zcms/ai-chat', // Endpoint para processar IA
+                url: '{{ url("admin/zcms/ai-chat") }}', // Endpoint para processar IA
                 method: 'POST'
                 , data: {
                     message: JSON.stringify(data)
