@@ -169,7 +169,7 @@ Se precisar de ajuda, escreva aqui e eu vou ajudar!`;
       enviarBtn.disabled = true;
       enviarBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> A responder...';
 
-      fetch('/api/chat', {
+      fetch('api/chat', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
