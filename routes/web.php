@@ -118,7 +118,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     });
 
     // Zcm
-    Route::prefix('zcms')->group(function() {
+    Route::prefix('zcms')->group(function () {
         Route::get('/', 'ZcmController@index')->name('zcms.index');
         Route::post('orders', 'ZcmController@orders');
         Route::post('create-run', 'ZcmController@createRun');
@@ -138,7 +138,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     // Moloni Item
     Route::delete('moloni-items/destroy', 'MoloniItemController@massDestroy')->name('moloni-items.massDestroy');
     Route::resource('moloni-items', 'MoloniItemController');
-    
+
+    // Moloni New Invoice
+    Route::get('moloni-new-invoices', 'MoloniNewInvoiceController@index')->name('moloni-new-invoices.index');
+    Route::get('moloni/refresh-token', 'MoloniNewInvoiceController@refreshTokenAjax')->name('moloni.refresh.token')->middleware('auth');
+
 });
 
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {
@@ -182,6 +186,6 @@ Route::prefix('form')->group(function () {
 
 Route::get('logistics', 'LogisticsController@index');
 
-Route::prefix('suporte-tecnico')->group(function() {
+Route::prefix('suporte-tecnico')->group(function () {
     Route::get('/', 'WebsiteController@suporteTecnico')->name('suporte-tecnico');
 });

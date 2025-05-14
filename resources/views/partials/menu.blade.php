@@ -252,6 +252,16 @@
                     {{ trans('cruds.moloni.title') }}
                 </a>
                 <ul class="c-sidebar-nav-dropdown-items">
+                    @can('moloni_new_invoice_access')
+                        <li class="c-sidebar-nav-item">
+                            <a href="{{ route("admin.moloni-new-invoices.index") }}" class="c-sidebar-nav-link {{ request()->is("admin/moloni-new-invoices") || request()->is("admin/moloni-new-invoices/*") ? "c-active" : "" }}">
+                                <i class="fa-fw fas fa-plus c-sidebar-nav-icon">
+
+                                </i>
+                                {{ trans('cruds.moloniNewInvoice.title') }}
+                            </a>
+                        </li>
+                    @endcan
                     @can('moloni_invoice_access')
                         <li class="c-sidebar-nav-item">
                             <a href="{{ route("admin.moloni-invoices.index") }}" class="c-sidebar-nav-link {{ request()->is("admin/moloni-invoices") || request()->is("admin/moloni-invoices/*") ? "c-active" : "" }}">

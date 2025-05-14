@@ -351,5 +351,9 @@ return [
             'deleted_at_helper'     => ' ',
         ],
     ],
+    'moloniNewInvoice' => [
+        'title'          => 'New Invoice',
+        'title_singular' => 'New Invoice',
+    ],
 
 ];
