@@ -95,6 +95,7 @@ class ZcmController extends Controller
                 'thread_id' => $run->thread_id,
             ];
         } else {
+            return $request;
             $this->createMessage($openaiApiKey, $request->thread_id, $request->message);
             $run = $this->createRun($openaiApiKey, $assistant_code, $request->thread_id);
             if ($run->status == 'in_progress' || $run->status == 'queued') {
