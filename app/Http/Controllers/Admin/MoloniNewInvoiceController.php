@@ -4,12 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Traits\Moloni;
-use Gate;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Models\MoloniInvoice;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
 
 class MoloniNewInvoiceController extends Controller
 {
@@ -24,50 +23,70 @@ class MoloniNewInvoiceController extends Controller
 
     public function processOcr(MoloniInvoice $moloniInvoice)
     {
-        $filePath = $moloniInvoice->file->getPath();
+        try {
+            $file = $moloniInvoice->file;
 
-        if (!file_exists($filePath)) {
-            return response()->json([
-                'success' => false,
-                'ocr' => '[OCR] Ficheiro não encontrado no caminho: ' . $filePath
+            if (!$file || !method_exists($file, 'getPath')) {
+                return response()->json([
+                    'success' => false,
+                    'ocr' => '[OCR] Ficheiro não está disponível ou método getPath() não existe.'
+                ]);
+            }
+
+            $filePath = $file->getPath();
+
+            if (!file_exists($filePath)) {
+                return response()->json([
+                    'success' => false,
+                    'ocr' => '[OCR] Ficheiro não encontrado no caminho: ' . $filePath
+                ]);
+            }
+
+            $response = Http::attach(
+                'file',
+                file_get_contents($filePath),
+                basename($filePath)
+            )->post('https://api.ocr.space/parse/image', [
+                'apikey' => env('OCR_API', 'CHAVE_INVALIDA'),
+                'language' => 'por',
+                'isOverlayRequired' => 'false',
+                'OCREngine' => '2',
             ]);
-        }
 
-        $response = Http::attach(
-            'file',
-            file_get_contents($filePath),
-            basename($filePath)
-        )->post('https://api.ocr.space/parse/image', [
-            'apikey' => env('OCR_API', 'CHAVE_INVALIDA'),
-            'language' => 'por',
-            'isOverlayRequired' => false,
-            'OCREngine' => 2,
-        ]);
 
-        $data = $response->json();
 
-        // Inicializa string vazia
-        $ocrText = '';
+            $data = $response->json();
 
-        // Verifica se o resultado está presente e é válido
-        if (!empty($data['ParsedResults']) && is_array($data['ParsedResults'])) {
+            if (!isset($data['ParsedResults']) || !is_array($data['ParsedResults'])) {
+                return response()->json([
+                    'success' => false,
+                    'ocr' => '[OCR] Resposta inesperada da API: ' . json_encode($data),
+                ]);
+            }
+
+            $ocrText = '';
+
             foreach ($data['ParsedResults'] as $parsed) {
-                // Adiciona apenas o texto extraído, se existir
-                if (isset($parsed['ParsedText'])) {
+                if (isset($parsed['ParsedText']) && is_string($parsed['ParsedText'])) {
                     $ocrText .= $parsed['ParsedText'] . "\n";
+                } elseif (isset($parsed['ParsedText']) && is_array($parsed['ParsedText'])) {
+                    $ocrText .= implode("\n", $parsed['ParsedText']) . "\n";
                 }
             }
-        } else {
-            $ocrText = '[OCR] Erro: ' . ($data['ErrorMessage'] ?? 'Resposta inválida da API');
+
+            $moloniInvoice->ocr = (string) $ocrText;
+            $moloniInvoice->save();
+
+            return response()->json([
+                'success' => true,
+                'ocr' => $ocrText,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'ocr' => '[OCR] Exceção capturada: ' . $e->getMessage(),
+            ]);
         }
-
-        // Salva texto como string
-        $moloniInvoice->ocr = $ocrText;
-        $moloniInvoice->save();
-
-        return response()->json([
-            'success' => true,
-            'ocr' => $ocrText,
-        ]);
     }
+    
 }
