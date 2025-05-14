@@ -50,6 +50,8 @@ class ZcmController extends Controller
     public function aiChat(Request $request)
     {
 
+        return $request;
+
         $openaiApiKey = env('OPENAI_API_KEY');
         $assistant_code = 'asst_Y9W4ZeLytuyp1vU6oG5211Ow';
 
