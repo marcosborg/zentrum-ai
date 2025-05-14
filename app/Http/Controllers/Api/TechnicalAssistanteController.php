@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use OpenAI\Laravel\Facades\OpenAI;
 
 class TechnicalAssistanteController extends Controller
 {
@@ -55,14 +54,22 @@ class TechnicalAssistanteController extends Controller
         $messages[] = ['role' => 'user', 'content' => $mensagemUser];
 
         try {
-            $resposta = OpenAI::chat()->create([
-                'model' => 'gpt-4',
-                'messages' => $messages,
-                'temperature' => 0.7,
-                'max_tokens' => 500,
-            ]);
+            $response = Http::withToken(env('OPENAI_API_KEY'))
+                ->post('https://api.openai.com/v1/chat/completions', [
+                    'model' => 'gpt-4',
+                    'messages' => $messages,
+                    'temperature' => 0.7,
+                    'max_tokens' => 500,
+                ]);
 
-            $respostaTexto = $resposta->choices[0]->message->content;
+            if (!$response->successful()) {
+                Log::error('Erro na API OpenAI: ' . $response->body());
+                return response()->json([
+                    'resposta' => 'Desculpa, ocorreu um erro ao tentar responder (API). Tenta novamente mais tarde.'
+                ], 500);
+            }
+
+            $respostaTexto = $response->json()['choices'][0]['message']['content'];
 
             // Atualiza o histórico na sessão
             $historico[] = ['role' => 'user', 'content' => $mensagemUser];
@@ -71,6 +78,7 @@ class TechnicalAssistanteController extends Controller
 
             return response()->json(['resposta' => $respostaTexto]);
         } catch (\Exception $e) {
+            Log::error('Exceção na chamada ao GPT: ' . $e->getMessage());
             return response()->json([
                 'resposta' => 'Desculpa, ocorreu um erro ao tentar responder. Por favor tenta novamente mais tarde.'
             ], 500);
