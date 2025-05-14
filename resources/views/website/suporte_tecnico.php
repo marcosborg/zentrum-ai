@@ -1,16 +1,12 @@
 <!doctype html>
 <html lang="pt">
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Suporte Técnico - Zentrum</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body {
-      background-color: #f8f9fa;
-    }
-
+    body { background-color: #f8f9fa; }
     .chat-message {
       background-color: #fff;
       border-radius: 15px;
@@ -20,32 +16,27 @@
       width: fit-content;
       max-width: 80%;
     }
-
     .chat-message.bot {
       background-color: #dbeeff;
       align-self: flex-start;
     }
-
     .chat-message.user {
       background-color: #dcf8c6;
       align-self: flex-end;
       text-align: right;
       margin-left: auto;
     }
-
     .chat-box {
       display: none;
       flex-direction: column;
       justify-content: space-between;
       height: 500px;
-      /* altura fixa do chat */
       margin-top: 30px;
       padding: 20px;
       border-radius: 10px;
       background-color: #ffffff;
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
     }
-
     .mensagens-container {
       flex-grow: 1;
       overflow-y: auto;
@@ -53,7 +44,6 @@
     }
   </style>
 </head>
-
 <body>
   <div class="container-fluid">
     <div class="row bg-primary text-white py-3 mb-4">
@@ -77,10 +67,7 @@
     <div class="row justify-content-center">
       <div class="col-lg-8">
         <div class="chat-box" id="chatBox">
-          <!-- Mensagens -->
           <div id="mensagens" class="d-flex flex-column mensagens-container"></div>
-
-          <!-- Input + botões -->
           <div>
             <input type="text" id="mensagemUsuario" class="form-control mb-2" placeholder="Escreve a tua dúvida...">
             <button id="enviarBtn" class="btn btn-success w-100 mb-2" onclick="enviarParaOpenAI()">Enviar</button>
@@ -93,24 +80,24 @@
 
   <script>
     let faturaValidada = false;
-    let faturaData = null; // guardar o contexto da fatura
+    let faturaData = null;
+    let chatHistory = [];
 
     function verificarFatura() {
       const input = document.getElementById('fatura');
       const numeroFatura = input.value.trim();
 
-      // Limpa mensagens anteriores e reseta estado
       document.getElementById('mensagens').innerHTML = '';
       document.getElementById('chatBox').style.display = 'none';
       faturaValidada = false;
       faturaData = null;
+      chatHistory = [];
 
       if (!numeroFatura) {
-        document.getElementById('chatBox').style.display = 'flex'; // Abre o chat
+        document.getElementById('chatBox').style.display = 'flex';
         mostrarMensagemNoChat("Por favor, introduza o número da fatura.", 'bot');
         return;
       }
-
 
       const numeroCodificado = encodeURIComponent(numeroFatura);
 
@@ -125,8 +112,14 @@
           const mensagemInicial = gerarMensagemDeInstrucao(data);
           mostrarMensagemNoChat(mensagemInicial, 'bot');
           document.getElementById('chatBox').style.display = 'flex';
+
           faturaValidada = true;
-          faturaData = data; // guardar o contexto para enviar depois
+          faturaData = data;
+
+          chatHistory.push({
+            role: 'system',
+            content: `Resumo técnico:\n${data.final_report || 'Sem relatório final disponível.'}`
+          });
         })
         .catch(() => {
           mostrarMensagemNoChat("Ocorreu um erro ao contactar o servidor. Tenta novamente.", 'bot');
@@ -146,8 +139,6 @@ Se precisar de ajuda, escreva aqui e eu vou ajudar!`;
       msg.classList.add('chat-message', tipo);
       msg.innerText = texto;
       mensagens.appendChild(msg);
-
-      // Scroll automático para a última mensagem
       mensagens.scrollTop = mensagens.scrollHeight;
     }
 
@@ -163,62 +154,60 @@ Se precisar de ajuda, escreva aqui e eu vou ajudar!`;
       if (!mensagem) return;
 
       mostrarMensagemNoChat(mensagem, 'user');
+      chatHistory.push({ role: 'user', content: mensagem });
       inputMsg.value = '';
 
-      // Desativa o botão e mostra loading
       enviarBtn.disabled = true;
       enviarBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> A responder...';
 
-      fetch('api/chat', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            mensagem,
-            contexto: faturaData // envia também o contexto da fatura
-          })
+      fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          mensagem,
+          contexto: faturaData,
+          historico: chatHistory
         })
-        .then(response => response.json())
-        .then(data => {
-          mostrarMensagemNoChat(data.resposta, 'bot');
-        })
-        .catch(() => {
-          mostrarMensagemNoChat("Erro ao contactar o assistente. Tenta novamente.", 'bot');
-        })
-        .finally(() => {
-          // Reativa o botão e repõe o texto original
-          enviarBtn.disabled = false;
-          enviarBtn.innerText = 'Enviar';
-        });
+      })
+      .then(response => response.json())
+      .then(data => {
+        mostrarMensagemNoChat(data.resposta, 'bot');
+        chatHistory.push({ role: 'assistant', content: data.resposta });
+        console.log(chatHistory);
+      })
+      .catch(() => {
+        mostrarMensagemNoChat("Erro ao contactar o assistente. Tenta novamente.", 'bot');
+      })
+      .finally(() => {
+        enviarBtn.disabled = false;
+        enviarBtn.innerText = 'Enviar';
+      });
     }
-
 
     function reiniciarConversa() {
       if (!confirm("Tem a certeza que quer reiniciar a conversa?")) return;
 
       fetch('/api/chat/reset', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        })
-        .then(() => {
-          document.getElementById('mensagens').innerHTML = '';
-          document.getElementById('chatBox').style.display = 'none';
-          faturaValidada = false;
-          faturaData = null;
-          mostrarMensagemNoChat("A conversa foi reiniciada. Pode introduzir uma nova fatura.", 'bot');
-        })
-        .catch(() => {
-          alert('Erro ao reiniciar a conversa. Tente novamente.');
-        });
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      })
+      .then(() => {
+        document.getElementById('mensagens').innerHTML = '';
+        document.getElementById('chatBox').style.display = 'none';
+        faturaValidada = false;
+        faturaData = null;
+        chatHistory = [];
+        mostrarMensagemNoChat("A conversa foi reiniciada. Pode introduzir uma nova fatura.", 'bot');
+      })
+      .catch(() => {
+        alert('Erro ao reiniciar a conversa. Tente novamente.');
+      });
     }
 
-    // Permitir envio com a tecla Enter
+    // Enviar com Enter
     document.getElementById('mensagemUsuario').addEventListener('keypress', function(e) {
       if (e.key === 'Enter') {
-        e.preventDefault(); // impede quebra de linha
+        e.preventDefault();
         enviarParaOpenAI();
       }
     });
@@ -226,5 +215,4 @@ Se precisar de ajuda, escreva aqui e eu vou ajudar!`;
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>
