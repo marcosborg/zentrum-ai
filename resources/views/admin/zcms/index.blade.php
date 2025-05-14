@@ -145,7 +145,7 @@
         $('#chat_controls').LoadingOverlay('show');
 
         $.ajax({
-            url: '/admin/zcms/ai-chat/', // Endpoint para processar IA
+            url: '{{ url('admin/zcms/ai-chat') }}', // Endpoint para processar IA
             method: 'POST',
             data: {
                 message: userMessage,
