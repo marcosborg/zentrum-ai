@@ -1,6 +1,8 @@
 @extends('layouts.admin')
 @section('content')
 
+<div class="row">
+    <div class="col-md-4">
 <div class="card">
     <div class="card-header">
         {{ trans('global.edit') }} {{ trans('cruds.moloniInvoice.title_singular') }}
@@ -72,6 +74,31 @@
         </form>
     </div>
 </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header">
+                Fatura
+            </div>
+            <div class="card-body">
+                <canvas id="pdf-canvas" style="border:1px solid #ccc; max-width: 100%;"></canvas>
+                <button id="btn-capturar" class="btn btn-success btn-sm mt-2">Capturar códigos</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="card">
+            <div class="card-header">
+                Referencias
+            </div>
+            <div class="card-body">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 
 
@@ -128,4 +155,65 @@
      }
 }
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+<script>
+    const url = "{{ $moloniInvoice->file->getUrl() }}"; // URL do teu PDF
+
+    const canvas = document.getElementById('pdf-canvas');
+    const context = canvas.getContext('2d');
+
+    // URL do ficheiro worker (obrigatório para funcionar corretamente)
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+
+    // Carrega o PDF e renderiza a primeira página
+    pdfjsLib.getDocument(url).promise.then(function(pdf) {
+        pdf.getPage(1).then(function(page) {
+            const scale = 0.5;
+            const viewport = page.getViewport({ scale });
+
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+
+            const renderContext = {
+                canvasContext: context,
+                viewport: viewport
+            };
+
+            page.render(renderContext);
+        });
+    });
+
+</script>
+<script>
+    document.getElementById('btn-capturar').addEventListener('click', function () {
+        const button = this;
+        button.disabled = true;
+        button.textContent = 'A processar...';
+
+        fetch("{{ route('admin.moloni-new-invoices.process-ocr', $moloniInvoice->id) }}", {
+
+            method: "POST",
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+            if (data.success) {
+                document.getElementById('ocr').value = data.ocr;
+                alert("OCR extraído com sucesso!");
+            } else {
+                alert("Erro ao processar OCR.");
+            }
+        })
+        .catch(() => alert("Erro de ligação ao servidor."))
+        .finally(() => {
+            button.disabled = false;
+            button.textContent = 'Capturar códigos';
+        });
+    });
+</script>
+
 @endsection

@@ -90,7 +90,7 @@ class MoloniInvoiceController extends Controller
             Media::whereIn('id', $media)->update(['model_id' => $moloniInvoice->id]);
         }
 
-        return redirect()->route('admin.moloni-invoices.index');
+        return redirect()->route('admin.moloni-invoices.edit', $moloniInvoice->id);
     }
 
     public function edit(MoloniInvoice $moloniInvoice)
@@ -115,7 +115,7 @@ class MoloniInvoiceController extends Controller
             $moloniInvoice->file->delete();
         }
 
-        return redirect()->route('admin.moloni-invoices.index');
+        return redirect()->route('admin.moloni-invoices.edit', $moloniInvoice->id);
     }
 
     public function show(MoloniInvoice $moloniInvoice)

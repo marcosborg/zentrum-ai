@@ -7,7 +7,9 @@ use App\Http\Controllers\Traits\Moloni;
 use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Session;
+use App\Models\MoloniInvoice;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 
 class MoloniNewInvoiceController extends Controller
 {
@@ -17,40 +19,55 @@ class MoloniNewInvoiceController extends Controller
     {
         abort_if(Gate::denies('moloni_new_invoice_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        // Se já temos token na sessão, não autenticar de novo (opcional)
-        if (!Session::has('moloni_access_token')) {
-            $auth = $this->authenticateMoloni();
-
-            if ($auth && isset($auth['access_token'])) {
-                // Guardar tokens na sessão
-                Session::put('moloni_access_token', $auth['access_token']);
-                Session::put('moloni_refresh_token', $auth['refresh_token']);
-                Session::put('moloni_token_expires_at', now()->addSeconds($auth['expires_in']));
-            }
-        }
-
         return view('admin.moloniNewInvoices.index');
     }
 
-    // Endpoint para renovar o token via AJAX
-    public function refreshTokenAjax()
+    public function processOcr(MoloniInvoice $moloniInvoice)
     {
-        if (!Session::has('moloni_refresh_token')) {
-            return response()->json(['error' => 'No refresh token found'], 400);
+        $filePath = $moloniInvoice->file->getPath();
+
+        if (!file_exists($filePath)) {
+            return response()->json([
+                'success' => false,
+                'ocr' => '[OCR] Ficheiro não encontrado no caminho: ' . $filePath
+            ]);
         }
 
-        $refreshToken = Session::get('moloni_refresh_token');
-        $newToken = $this->refreshMoloniToken($refreshToken);
+        $response = Http::attach(
+            'file',
+            file_get_contents($filePath),
+            basename($filePath)
+        )->post('https://api.ocr.space/parse/image', [
+            'apikey' => env('OCR_API', 'CHAVE_INVALIDA'),
+            'language' => 'por',
+            'isOverlayRequired' => false,
+            'OCREngine' => 2,
+        ]);
 
-        if ($newToken && isset($newToken['access_token'])) {
-            // Atualiza a sessão
-            Session::put('moloni_access_token', $newToken['access_token']);
-            Session::put('moloni_refresh_token', $newToken['refresh_token']);
-            Session::put('moloni_token_expires_at', now()->addSeconds($newToken['expires_in']));
+        $data = $response->json();
 
-            return response()->json(['success' => true, 'access_token' => $newToken['access_token']]);
+        // Inicializa string vazia
+        $ocrText = '';
+
+        // Verifica se o resultado está presente e é válido
+        if (!empty($data['ParsedResults']) && is_array($data['ParsedResults'])) {
+            foreach ($data['ParsedResults'] as $parsed) {
+                // Adiciona apenas o texto extraído, se existir
+                if (isset($parsed['ParsedText'])) {
+                    $ocrText .= $parsed['ParsedText'] . "\n";
+                }
+            }
+        } else {
+            $ocrText = '[OCR] Erro: ' . ($data['ErrorMessage'] ?? 'Resposta inválida da API');
         }
 
-        return response()->json(['error' => 'Failed to refresh token'], 500);
+        // Salva texto como string
+        $moloniInvoice->ocr = $ocrText;
+        $moloniInvoice->save();
+
+        return response()->json([
+            'success' => true,
+            'ocr' => $ocrText,
+        ]);
     }
 }

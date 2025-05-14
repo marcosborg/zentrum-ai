@@ -134,6 +134,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::post('moloni-invoices/media', 'MoloniInvoiceController@storeMedia')->name('moloni-invoices.storeMedia');
     Route::post('moloni-invoices/ckmedia', 'MoloniInvoiceController@storeCKEditorImages')->name('moloni-invoices.storeCKEditorImages');
     Route::resource('moloni-invoices', 'MoloniInvoiceController');
+    Route::post('moloni-invoices/{moloniInvoice}/process-ocr', 'MoloniNewInvoiceController@processOcr')->name('moloni-new-invoices.process-ocr');
+
 
     // Moloni Item
     Route::delete('moloni-items/destroy', 'MoloniItemController@massDestroy')->name('moloni-items.massDestroy');
@@ -141,7 +143,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 
     // Moloni New Invoice
     Route::get('moloni-new-invoices', 'MoloniNewInvoiceController@index')->name('moloni-new-invoices.index');
-    Route::get('moloni/refresh-token', 'MoloniNewInvoiceController@refreshTokenAjax')->name('moloni.refresh.token')->middleware('auth');
 
 });
 

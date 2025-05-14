@@ -76,7 +76,6 @@
 </div>
 
 @endsection
-
 @section('scripts')
 <script>
     Dropzone.options.fileDropzone = {
@@ -128,28 +127,4 @@
      }
 }
 </script>
-<script>
-    // Função para renovar o token a cada 30 minutos (1800 segundos)
-    function scheduleTokenRefresh() {
-        setInterval(function() {
-            fetch("{{ route('moloni.refresh.token') }}")
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        console.log("Token renovado com sucesso:", data.access_token);
-                    } else {
-                        console.error("Erro ao renovar token:", data);
-                    }
-                })
-                .catch(error => {
-                    console.error("Erro AJAX:", error);
-                });
-        }, 25 * 60 * 1000); // 25 minutos para dar margem antes de expirar
-    }
-
-    document.addEventListener("DOMContentLoaded", function() {
-        scheduleTokenRefresh();
-    });
-</script>
-
 @endsection
