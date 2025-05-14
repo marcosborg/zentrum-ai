@@ -146,17 +146,17 @@
 
         $.ajax({
             url: '/admin/zcms/ai-chat/', // Endpoint para processar IA
-            method: 'POST'
-            , data: {
-                message: userMessage
-                , thread_id: thread_id
-            , }
-            , success: function(response) {
+            method: 'POST',
+            data: {
+                message: userMessage,
+                thread_id: thread_id,
+            },
+            success: function(response) {
                 console.log(response);
                 $('#chat_controls').LoadingOverlay('hide');
                 appendMessage('assistant', response.message);
-            }
-            , error: function(err) {
+            },
+            error: function(err) {
                 $('#chat_controls').LoadingOverlay('hide');
                 console.log(err);
                 appendMessage('assistant', 'Ocorreu um erro. Tente novamente.');
